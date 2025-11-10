@@ -1,0 +1,99 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+.venvs/
+Pipfile.lock
+
+# Python packaging / build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+pip-wheel-metadata/
+wheelhouse/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.iml
+*.sublime-workspace
+*.sublime-project
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100/
+.Trashes/
+.VolumeIcon.icns
+.fseventsd/
+.DocumentRevisions-V100/
+.TemporaryItems/
+.AppleDB/
+.apdisk
+
+# Logs, databases and runtime files
+# *.log
+# *.sql
+# *.sqlite
+# *.db
+# *.pid
+# *.seed
+# For now this is ignored, may change later
+
+# Test / coverage / caches
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+.cache/
+.hypothesis/
+
+# Type check / analysis caches
+.mypy_cache/
+.pyre/
+.pytype/
+.pyrightcache/
+
+# Misc
+*.env
+.env
+*.pem
+*.key
+pip-selfcheck.json
+
+# Media / recordings (ignore recorded test audio)
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.ogg
+
+# Machine learning model binaries (large files)
+# If wanting to track models in repo, remove and use Git LFS
+models/
+**/*.onnx
+**/*.tflite
+**/*.pb
+**/*.h5
+**/*.ckpt
+**/*.pt
+**/*.pth
+
+# OS-specific / editor swap files
+*~
+*.swp
+*.swo
+Thumbs.db
