@@ -10,7 +10,7 @@ Capstone/
             command_listener.py
         ├── intent/
         ├── tts/
+    ├── init.py                         # Initialization of Pi
 ├── requirements.txt
 ├── .gitignore
-├── README.md
-└── init.py                         # Initialization
+└── README.md

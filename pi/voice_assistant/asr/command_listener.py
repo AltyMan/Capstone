@@ -7,7 +7,7 @@ from openwakeword.model import Model as WakeModel
 from openwakeword.utils import download_models
 import wave, sys
 
-# --- DIAGNOSTICS: device info & defaults ---
+# Diagnostics
 print("SoundDevice default.device:", sd.default.device)
 print("SoundDevice default.samplerate:", sd.default.samplerate)
 try:
@@ -17,16 +17,15 @@ try:
 except Exception as e:
     print("Could not query devices:", e)
 
-# --- CONFIG ---
+# Config
 SCRIPT_DIR = Path(__file__).resolve().parent
 VOSK_MODEL_PATH = SCRIPT_DIR / "models" / "en-us"   # your local Vosk model
 COMMAND_TIMEOUT = 6  # seconds after wake word to listen for commands
 
-# --- Ensure 'hey_jarvis' model is available in resources ---
 print("🔍 Checking for 'hey_jarvis' wake word model...")
 download_models(model_names=["hey_jarvis"])  # downloads to openwakeword's internal resources if missing
 
-# --- Initialize models ---
+# Initialization
 wake = WakeModel(wakeword_models=["hey_jarvis"])  # model name only → uses resource directory
 print("🎙 OpenWakeWord ready with 'hey_jarvis'")
 
@@ -34,7 +33,7 @@ vosk_model = Model(str(VOSK_MODEL_PATH))
 recognizer = KaldiRecognizer(vosk_model, 16000)
 audio_queue = queue.Queue()
 
-# --- Audio callback ---
+# Audio callback
 _print_counter = 0
 def audio_callback(indata, frames, time_info, status):
     global _print_counter
@@ -54,7 +53,7 @@ def audio_callback(indata, frames, time_info, status):
     audio_queue.put((arr, rms))
 
 
-# --- Main loop ---
+# Main loop
 def main():
     print("🎧 Listening for wake word...")
 
