@@ -43,10 +43,10 @@ wheelhouse/
 .apdisk
 
 # Logs, databases and runtime files
-# *.log
+*.log
 # *.sql
 # *.sqlite
-# *.db
+*.db
 # *.pid
 # *.seed
 # For now this is ignored, may change later

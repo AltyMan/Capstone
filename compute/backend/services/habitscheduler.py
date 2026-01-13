@@ -1,4 +1,4 @@
-from models.habitrepository import HabitRepository
+from objects.habitrepository import HabitRepository
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.date import DateTrigger
 from apscheduler.schedulers.background import BackgroundScheduler

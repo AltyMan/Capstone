@@ -1,7 +1,6 @@
 from flask import Flask
 from routes.habits import habits_bp
 from test_init import *
-from db.sqlite import get_connection
 from db.init_db import init_db
 
 def create_app() -> Flask:
