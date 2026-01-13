@@ -1,0 +1,551 @@
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:config:User 1 -> GET_UPDATE_USER
+INFO:config:User 1 -> GET_USER_HABITS
+INFO:config:User 1 -> GET_HABIT_Lamp_RULES
+INFO:config:User 1 -> GET_HABIT_ALL_RULES
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+ERROR:config:User 1 -> POST_LOG_HABIT (Lamp)
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.2.19:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.2.19:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.2.19:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+WARNING:config:User 1 -> GET_USER_SUMMARY
+WARNING:config:User 1 -> GET_USER_TRENDS
+WARNING:config:User 1 -> GET_USER_STREAKS
+WARNING:config:User 1 -> USER_RESCHEDULE
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:apscheduler.scheduler:Scheduler started
+DEBUG:apscheduler.scheduler:Looking for jobs to run
+DEBUG:apscheduler.scheduler:No jobs; waiting until a job is added
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://192.168.2.19:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m

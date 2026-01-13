@@ -1,0 +1,21 @@
+# Purpose
+Backend of Habit Tracking System
+
+## To Implement
+- [x] SQlite Database for Habits
+- [ ] Better REST API Endpoints
+- [ ] Streaks/Analytic Systems
+- [ ] Documentation
+- [x] Design proper schema for SQlite
+- [ ] Testing client for Flask .test_client()
+- [ ] Heatmaps
+- [ ] CPM for deciding task times
+- [ ] Chat ML Guidance?
+    - predict habit completion probability
+    - detect habit decay
+    - recommend optimal reminder times
+    - classify self-reported vs device habits
+- ActivityWatch data format
+
+# HabitRepository
+purpose is to segment responsibilites, Habit should not be a scheduler, datastore, and logger.
