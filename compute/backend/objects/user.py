@@ -5,6 +5,8 @@ from objects.habit import Habit
 from objects.habitrepository import HabitRepository
 from db.sqlite import get_connection
 
+# CRUD Operations
+
 class User:
     
     @staticmethod
@@ -34,3 +36,6 @@ class User:
     
     def update_habit(self, habit_name: Optional[str] = None):
         pass
+    
+    def add_rule(self, habit_id: int, day: int, hour: int, minute: int):
+        self.repo.add_rule(habit_id, day, hour, minute)
