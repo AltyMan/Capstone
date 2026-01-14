@@ -1,6 +1,7 @@
 import random
-from models.user import User
+from objects.user import User
 import pandas as pd
+from objects.rule import Rule
 from db.sqlite import query_habit, HabitQueryResult
 
 def habit_test():
@@ -37,6 +38,8 @@ def habit_test_3():
     user: User = User.create()
     user.add_habit('Gaming')
     user.log_habit('Gaming')
+    user.add_rule(1,Rule(1,1,1,1))
     print(user.get_habit_logs())
+    
 
     
