@@ -15,4 +15,4 @@ class Habit:
     habit_id: str = None
     is_device: bool = True
     streak: int = 0
-    #daily_rules: list[Rule] = []
+    
