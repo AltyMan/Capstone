@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import datetime
 from typing import Optional
 from objects.habit import Habit
+from objects.rule import Rule
 from objects.habitrepository import HabitRepository
 from db.sqlite import get_connection
 
@@ -37,5 +38,5 @@ class User:
     def update_habit(self, habit_name: Optional[str] = None):
         pass
     
-    def add_rule(self, habit_id: int, day: int, hour: int, minute: int):
-        self.repo.add_rule(habit_id, day, hour, minute)
+    def add_rule(self, habit_id: int, rule: Rule):
+        self.repo.add_rule(habit_id, rule)
