@@ -2,7 +2,7 @@ import random
 from objects.user import User
 import pandas as pd
 from objects.rule import Rule
-from db.sqlite import query_habit, HabitQueryResult
+from services.habitscheduler import HabitScheduler
 
 def habit_test():
     return       
@@ -32,14 +32,19 @@ def habit_test_2():
     print(user._get_user_habits())
     USERS[user.id] = user
     
-    res: HabitQueryResult = query_habit(user.id, habits[0])
+    res = query_habit(user.id, habits[0])
 
 def habit_test_3():
-    user: User = User.create()
-    user.add_habit('Gaming')
-    user.log_habit('Gaming')
-    user.add_rule(1,Rule(1,1,1,1))
-    print(user.get_habit_logs())
     
-
+    sc = HabitScheduler()
+    sc.start()
+    sc.restore_jobs()
+    sc.print_active_jobs(User(1).id)
+    
+    User(1).repo.drop_all_rules()
+        
+    for i in range(0, 5):
+        user: User = User(i)
+        user.repo.generate_rules()
+        user.repo.drop_dead_rules()
     
