@@ -2,7 +2,6 @@ import sqlite3
 from pathlib import Path
 import pandas as pd
 from typing import NamedTuple
-from utils.time import break_timestamp
 
 DB_PATH: Path = Path("db/habits.db")
 
@@ -55,32 +54,32 @@ class HabitQueryResult(NamedTuple):
     habit_name: str
     data: pd.DataFrame
         
-def query_habit(user_id: int, habit_name: str) -> HabitQueryResult:
-    with get_connection() as conn:
-        cursor: sqlite3.Cursor = conn.execute(
-            """
-            SELECT timestamp, state, self_reported FROM habit_logs WHERE user_id = (?) AND habit_name = (?);
-            """,
-            (
-                user_id,
-                habit_name,
-            )
-        )
+# def query_habit(user_id: int, habit_name: str) -> HabitQueryResult:
+#     with get_connection() as conn:
+#         cursor: sqlite3.Cursor = conn.execute(
+#             """
+#             SELECT timestamp, state, self_reported FROM habit_logs WHERE user_id = (?) AND habit_name = (?);
+#             """,
+#             (
+#                 user_id,
+#                 habit_name,
+#             )
+#         )
         
-        rows = cursor.fetchall()
-        if not rows:
-            return HabitQueryResult(
-        user_id=user_id,
-        habit_name=habit_name,
-        data=pd.DataFrame()
-    )
+#         rows = cursor.fetchall()
+#         if not rows:
+#             return HabitQueryResult(
+#         user_id=user_id,
+#         habit_name=habit_name,
+#         data=pd.DataFrame()
+#     )
         
-        df = pd.DataFrame(data=rows, columns=rows[0].keys())
-        df = break_timestamp(df)
-        df = df[['day_of_week', 'hour', 'minute', 'state', 'self_reported']]
+#         df = pd.DataFrame(data=rows, columns=rows[0].keys())
+#         df = break_timestamp(df)
+#         df = df[['day_of_week', 'hour', 'minute', 'state', 'self_reported']]
         
-        return HabitQueryResult(
-            user_id=user_id,
-            habit_name=habit_name,
-            data=df
-        )
+#         return HabitQueryResult(
+#             user_id=user_id,
+#             habit_name=habit_name,
+#             data=df
+#         )
