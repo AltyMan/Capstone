@@ -23,7 +23,7 @@ def get_user_logs(user_id: int):
         "logs" : user.get_habit_logs().to_dict()
     }
 
-@habits_bp.post("<int:user_id>/habits/log")
+@habits_bp.post("/<int:user_id>/habits/log")
 def post_user_log(user_id: int):
     user = User(user_id)
     habit_name: str = request.args.get('name')
@@ -31,7 +31,7 @@ def post_user_log(user_id: int):
     self_reported: str = request.args.get('reported')
     user.log_habit(habit_name, state, self_reported)
 
-@habits_bp.post("<int:user_id>/habits/add")
+@habits_bp.post("/<int:user_id>/habits/add")
 def post_user_add_habit(user_id: int):
     user = User(user_id)
     habit_name: str = request.args.get('name')
