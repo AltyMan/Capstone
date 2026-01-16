@@ -1,6 +1,6 @@
 from db.sqlite import get_connection
 from datetime import datetime
-from utils.time import _timestamp
+from utils.time import _timestamp, break_timestamp
 from objects.habit import Habit
 from objects.rule import Rule
 from typing import Optional
@@ -61,6 +61,7 @@ class HabitRepository:
             if not rows:
                 return DataFrame()
             
+            
             df = DataFrame(rows, columns=rows[0].keys())
             return df
         
@@ -68,10 +69,66 @@ class HabitRepository:
         with get_connection() as conn:
             conn.execute(
                 """
-                INSERT INTO habit_rules (user_id, job_id, habit_id, day, hour, minute, count)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO habit_rules (user_id, job_id, habit_id, day, hour, minute, count, active)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
-                (self.user_id, f"{self.user_id}_job_test", habit_id, rule.day, rule.hour, rule.minute, 1)
+                (self.user_id, f"{self.user_id}_job_test", habit_id, rule.day, rule.hour, rule.minute, 1, rule.active)
+            )
+            
+            
+    def generate_rules(self):
+        with get_connection() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM habits WHERE user_id = ?
+                """,
+                (self.user_id,)
+            ).fetchall()
+            
+            names = [r['name'] for r in rows]
+            
+            for name in names:
+                rows = conn.execute(
+                    """
+                    SELECT * FROM habit_logs WHERE user_id = ? AND habit_name = ?
+                    """,
+                    (self.user_id,name,)
+                ).fetchall()
+                
+                habit_data = break_timestamp(DataFrame(rows, columns=rows[0].keys()))
+                for i in range(0, 7):
+                    df = habit_data[habit_data['day_of_week'] == i]
+                    try:
+                        hour = int(df['hour'].mean())
+                        minute = int(df['minute'].mean())
+                    except:
+                        hour = 0
+                        minute = 0
+                        
+                    rule = Rule(i, hour, minute, True)
+                
+                    conn.execute(
+                        """
+                        INSERT INTO habit_rules (user_id, job_id, habit_id, day, hour, minute, count, active)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (self.user_id,f"{self.user_id}_{name}_{rule.day}_test",f"{self.user_id}_{name}_test", rule.day, rule.hour, rule.minute, 1, int(rule.active))
+                    )
+                
+    
+    def drop_all_rules(self):
+        with get_connection() as conn:
+            conn.execute(
+                """
+                DELETE FROM habit_rules
+                """
+            )
+    def drop_dead_rules(self):
+        with get_connection() as conn:
+            conn.execute(
+                """
+                DELETE FROM habit_rules WHERE hour = 0 AND minute = 0
+                """
             )
         
     def get_rules(self):
