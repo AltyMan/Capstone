@@ -35,6 +35,7 @@ def init_db():
             hour INTEGER NOT NULL,
             minute INTEGER NOT NULL,
             count INTEGER DEFAULT 0,
+            active BOOLEAN,
             unique(job_id)
             FOREIGN KEY(user_id) REFERENCES users(id)
             FOREIGN KEY(habit_id) REFERENCES habits(id)
