@@ -124,7 +124,7 @@ class HabitRepository:
                 (self.user_id, f"{self.user_id}_job_test", f"{self.user_id}_{habit_id}_test", rule.day, rule.hour, rule.minute, 1, rule.active)
             )
         
-    def get_rules(self):
+    def get_rules(self) -> list[Rule]:
         with get_connection() as conn:
             rows = conn.execute(
                 """
@@ -132,7 +132,7 @@ class HabitRepository:
                 """,
                 (self.user_id,)
             ).fetchall()
-            return rows
+            return [Rule(r['day'], r['hour'], r['minute'], r['active']) for r in rows]
         
     def upsert_rule(self, habit: str):
         with get_connection() as conn:
