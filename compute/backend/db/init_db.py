@@ -10,7 +10,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS habits (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
-            habit_full_id TEXT NOT NULL,
+            habit_full_id TEXT,
             mqtt_topic TEXT,
             name TEXT NOT NULL,
             is_device BOOLEAN DEFAULT 0,
