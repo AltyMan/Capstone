@@ -48,3 +48,5 @@ def habit_test_3():
         user.repo.generate_rules()
         user.repo.drop_dead_rules()
     
+    User(1).repo.upsert_rule('Lamp')
+    
