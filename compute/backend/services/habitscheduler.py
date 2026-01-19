@@ -6,6 +6,7 @@ from db.sqlite import get_connection
 from utils.singleton import _SingletonWrapper
 from utils.decorators import *
 
+@test_only
 def test_job_func(text):
     print(f"Hello {text}!")
 
