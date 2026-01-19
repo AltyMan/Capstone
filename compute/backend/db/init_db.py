@@ -31,7 +31,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
             job_id TEXT NOT NULL,
-            habit_id INTEGER NOT NULL,
+            habit_id TEXT NOT NULL,
             day INTEGER NOT NULL,
             hour INTEGER NOT NULL,
             minute INTEGER NOT NULL,
@@ -39,6 +39,6 @@ def init_db():
             active BOOLEAN,
             unique(job_id)
             FOREIGN KEY(user_id) REFERENCES users(id)
-            FOREIGN KEY(habit_id) REFERENCES habits(user_id)
+            FOREIGN KEY(user_id) REFERENCES habits(user_id)
         );
         """)
