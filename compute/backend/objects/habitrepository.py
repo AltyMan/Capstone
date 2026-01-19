@@ -6,6 +6,9 @@ from objects.rule import Rule
 from typing import Optional
 from pandas import DataFrame
 
+"""Domain Driven Design"""
+import ddd
+
 class HabitRepository:
     def __init__(self, user_id: int):
         self.user_id = user_id
@@ -140,8 +143,26 @@ class HabitRepository:
                 (self.user_id,)
             )
         
-    def upsert_rule(self):
+    def upsert_rule(self, habit: str):
+        with get_connection() as conn:
+            conn.execute(
+             """
+             UPDATE habit_rules
+             SET day = 0, hour = 0, minute = 0
+             WHERE user_id = ? AND habit_id = ?
+             """,
+             (self.user_id,f"{self.user_id}_{habit}_test")
+            )
         return
     
-    def delete_rule(self):
+    def delete_rule(self, habit: str):
+        with get_connection() as conn:
+            conn.execute(
+                """
+                DELETE FROM habits
+                WHERE user_id = ?
+                AND name = ?
+                """,
+                (self.user_id, habit)
+            )
         return
