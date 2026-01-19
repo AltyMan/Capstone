@@ -1,16 +1,28 @@
 # Capstone
 Final Year Undergraduate Capstone Project
 
-Capstone/
-├── pi/
-    ├── automation/
-    ├── voice_assistant/
-        ├── asr/
-            ├── models/
-            command_listener.py
-        ├── intent/
-        ├── tts/
-    ├── init.py                         # Initialization of Pi
-├── requirements.txt
-├── .gitignore
-└── README.md
+# Directory Structure
+- Capstone/
+    - compute/
+        - backend/
+            - db/
+            - objects/
+            - routes/
+            - services/
+            - test/
+            - utils/
+        - cv/
+        - frontend/
+        - mobile/
+    - pi/
+        - automation/
+        - voice_assistant/
+            - asr/
+                - models/
+                command_listener.py
+            - intent/
+            - tts/
+        init.py
+    requirements.txt
+.gitignore
+README.md
