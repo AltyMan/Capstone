@@ -40,7 +40,21 @@ class User:
     
     def get_habit_logs(self, habit_name: Optional[str] = None):
         return self.repo.get_logs(habit_name)
-
+    
+    def update_log(self, id: int, field: str, value: str | int | bool):
+        self.repo.update_log(id, field, value)
+    
+    def delete_log(self, id: int):
+        self.repo.delete_log(id)
     
     def add_rule(self, habit_id: int, rule: Rule):
         self.repo.add_rule(habit_id, rule)
+        
+    def get_rules(self) -> list[Rule]:
+        return self.repo.get_rules()
+    
+    def update_rule(self, habit: str):
+        self.repo.upsert_rule(habit)
+    
+    def delete_rule(self, habit: str):
+        self.repo.delete_rule(habit)
