@@ -10,6 +10,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS habits (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
+            habit_full_id TEXT NOT NULL,
             mqtt_topic TEXT,
             name TEXT NOT NULL,
             is_device BOOLEAN DEFAULT 0,
@@ -38,6 +39,6 @@ def init_db():
             active BOOLEAN,
             unique(job_id)
             FOREIGN KEY(user_id) REFERENCES users(id)
-            FOREIGN KEY(habit_id) REFERENCES habits(id)
+            FOREIGN KEY(habit_id) REFERENCES habits(user_id)
         );
         """)
