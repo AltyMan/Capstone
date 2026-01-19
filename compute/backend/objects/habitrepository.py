@@ -37,6 +37,29 @@ class HabitRepository:
             habits.append(h)
             
         return habits
+    
+    def update_habit(self, field: str, value: str | int | bool, habit: str):
+        with get_connection() as conn:
+            conn.execute(
+                f"""
+                UPDATE habits
+                SET {field} = ?
+                WHERE user_id = ?
+                AND name = ?
+                """,
+                (value, self.user_id, habit)
+            )
+            
+    def delete_habit(self, habit: str):
+        with get_connection() as conn:
+            conn.execute(
+                """
+                DELETE FROM habits
+                WHERE user_id = ?
+                AND name = ?
+                """,
+                (self.user_id, habit,)
+            )
 
     def log(self, habit_name: str, state: str, self_reported: bool):
         with get_connection() as conn:
@@ -67,18 +90,76 @@ class HabitRepository:
             
             df = DataFrame(rows, columns=rows[0].keys())
             return df
+    
+    def update_log(self, id: int, field: str, value: int | str | bool):
+        with get_connection() as conn:
+            conn.execute(
+                f"""
+                UPDATE habit_logs
+                SET {field} = ?
+                WHERE user_id = ?
+                AND id = ?
+                """,
+                (value, self.user_id, id,)
+            )
         
-    def add_rule(self, habit_id: int, rule: Rule):
+    def delete_log(self, id: int):
+        with get_connection() as conn:
+            conn.execute(
+                """
+                DELETE FROM habit_logs
+                WHERE id = ?
+                AND user_id = ?
+                """,
+                (id, self.user_id,)
+            )
+        
+    def add_rule(self, habit_id: str, rule: Rule):
         with get_connection() as conn:
             conn.execute(
                 """
                 INSERT INTO habit_rules (user_id, job_id, habit_id, day, hour, minute, count, active)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
-                (self.user_id, f"{self.user_id}_job_test", habit_id, rule.day, rule.hour, rule.minute, 1, rule.active)
+                (self.user_id, f"{self.user_id}_job_test", f"{self.user_id}_{habit_id}_test", rule.day, rule.hour, rule.minute, 1, rule.active)
             )
-            
-            
+        
+    def get_rules(self):
+        with get_connection() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM habit_rules WHERE user_id = ?
+                """,
+                (self.user_id,)
+            ).fetchall()
+            return rows
+        
+    def upsert_rule(self, habit: str):
+        with get_connection() as conn:
+            conn.execute(
+             """
+             UPDATE habit_rules
+             SET day = 0, hour = 0, minute = 0
+             WHERE user_id = ? AND habit_id = ?
+             """,
+             (self.user_id,f"{self.user_id}_{habit}_test")
+            )
+    
+    def delete_rule(self, habit: str):
+        with get_connection() as conn:
+            conn.execute(
+                """
+                DELETE FROM habit_rules
+                WHERE user_id = ?
+                AND name = ?
+                """,
+                (self.user_id, habit)
+            )
+        return
+    
+    """
+    habit_id is AN INTEGER, not a string, will break when FKs are enforced.
+    """
     def generate_rules(self):
         with get_connection() as conn:
             rows = conn.execute(
@@ -133,36 +214,3 @@ class HabitRepository:
                 DELETE FROM habit_rules WHERE hour = 0 AND minute = 0
                 """
             )
-        
-    def get_rules(self):
-        with get_connection() as conn:
-            conn.execute(
-                """
-                SELECT * FROM habit_rules WHERE user_id = ?
-                """,
-                (self.user_id,)
-            )
-        
-    def upsert_rule(self, habit: str):
-        with get_connection() as conn:
-            conn.execute(
-             """
-             UPDATE habit_rules
-             SET day = 0, hour = 0, minute = 0
-             WHERE user_id = ? AND habit_id = ?
-             """,
-             (self.user_id,f"{self.user_id}_{habit}_test")
-            )
-        return
-    
-    def delete_rule(self, habit: str):
-        with get_connection() as conn:
-            conn.execute(
-                """
-                DELETE FROM habits
-                WHERE user_id = ?
-                AND name = ?
-                """,
-                (self.user_id, habit)
-            )
-        return
