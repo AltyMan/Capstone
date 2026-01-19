@@ -16,6 +16,7 @@ Backend of Habit Tracking System
     - recommend optimal reminder times
     - classify self-reported vs device habits
 - ActivityWatch data format
+- [ ] pydantic/pytest?
 
 # HabitRepository
 purpose is to segment responsibilites, Habit should not be a scheduler, datastore, and logger.
