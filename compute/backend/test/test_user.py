@@ -1,4 +1,5 @@
 from objects.user import User
+from objects.rule import Rule
 import pytest
 from db.init_db import init_db
 
@@ -55,3 +56,15 @@ def test_log_habit():
     row = logs.iloc[0]
     assert row["state"] == "OK"
     assert bool(row["self_reported"]) is True
+    
+def test_create_rule():
+    user = User.create()
+    
+    user.add_habit("Sleep")
+    user.add_rule("Sleep", Rule(1,1,1,1))
+    rules = user.get_rules()
+    
+    assert rules[0].day == 1
+    assert rules[0].hour == 1
+    assert rules[0].minute == 1
+    assert bool(rules[0].active) is True

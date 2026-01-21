@@ -47,7 +47,7 @@ class User:
     def delete_log(self, id: int):
         self.repo.delete_log(id)
     
-    def add_rule(self, habit_id: int, rule: Rule):
+    def add_rule(self, habit_id: str, rule: Rule):
         self.repo.add_rule(habit_id, rule)
         
     def get_rules(self) -> list[Rule]:
