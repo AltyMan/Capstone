@@ -1,15 +1,21 @@
 from flask import Flask
 from routes.habits import habits_bp
+from routes.logs import logs_bp
+from routes.rules import rules_bp
+from routes.users import users_bp
 from test_init import *
 from db.init_db import init_db
 
 def create_app() -> Flask:
     
     init_db()
-    habit_test_3()
+    # habit_test_3()
     
     app = Flask(__name__)
     app.register_blueprint(habits_bp)
+    app.register_blueprint(logs_bp)
+    app.register_blueprint(rules_bp)
+    app.register_blueprint(users_bp)
     
     return app
 
