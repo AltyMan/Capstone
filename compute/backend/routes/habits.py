@@ -10,6 +10,9 @@ def post_add_habit(user_id: int):
     habit_name: str = request.args.get('name')
     is_device: bool = request.args.get('device', type=bool)
     
+    if is_device is None:
+        is_device = False
+    
     user.add_habit(habit_name, is_device)
     
     return {
