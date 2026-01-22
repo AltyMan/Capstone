@@ -6,45 +6,49 @@ habits_bp = Blueprint("habits", __name__)
 
 @habits_bp.post(f'/<int:user_id>/{habits_bp.name}/add')
 def post_add_habit(user_id: int):
-    return
+    user = User(user_id)
+    habit_name: str = request.args.get('name')
+    is_device: bool = request.args.get('device', type=bool)
+    
+    user.add_habit(habit_name, is_device)
+    
+    return {
+        "response":
+            f"successfully added Habit {habit_name}"
+    }, 200
 
 @habits_bp.get(f'/<int:user_id>/{habits_bp.name}')
 def get_habits(user_id: int):
-    return
+    user = User(user_id)
+    return {
+        "habits":
+            [
+                asdict(h) for h in user.get_habits()
+            ]
+    }, 200
 
 @habits_bp.post(f'/<int:user_id>/{habits_bp.name}/update')
 def post_update_habit(user_id: int):
-    return
+    user = User(user_id)
+    habit_name: str = request.args.get('name')
+    field: str = request.args.get('field')
+    value: str = request.args.get('value')
+    
+    user.update_habit(field, value, habit_name)
+    
+    return {
+        "response":
+            f"Successfully updated Habit {habit_name} ({field}:{value})"
+    }, 200
 
 @habits_bp.post(f'/<int:user_id>/{habits_bp.name}/delete')
 def post_delete_habit(user_id: int):
-    return
-
-# @habits_bp.get("/<int:user_id>/habits")
-# def get_user_habits(user_id: int):
-#     user = User(user_id)
-#     return {
-#         "habits": [asdict(h) for h in user.get_habits()]
-#     }, 200
+    user = User(user_id)
+    habit_name: str = request.args.get('name')
     
-# @habits_bp.get("/<int:user_id>/habits/logs")
-# def get_user_logs(user_id: int):
-#     user = User(user_id)
-#     return {
-#         "logs" : user.get_habit_logs().to_dict()
-#     }
-
-# @habits_bp.post("/<int:user_id>/habits/log")
-# def post_user_log(user_id: int):
-#     user = User(user_id)
-#     habit_name: str = request.args.get('name')
-#     state: str = request.args.get('state')
-#     self_reported: str = request.args.get('reported')
-#     user.log_habit(habit_name, state, self_reported)
-
-# @habits_bp.post("/<int:user_id>/habits/add")
-# def post_user_add_habit(user_id: int):
-#     user = User(user_id)
-#     habit_name: str = request.args.get('name')
-#     is_device: bool = request.args.get('device', type=bool)
-#     user.add_habit(habit_name, is_device)
+    user.delete_habit(habit_name)
+    
+    return {
+        "response":
+            f"Successfully deleted Habit {habit_name}"
+    }, 200
