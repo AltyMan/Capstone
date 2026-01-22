@@ -1,0 +1,2 @@
+-- SQLite
+SELECT * FROM habits WHERE user_id = 2
