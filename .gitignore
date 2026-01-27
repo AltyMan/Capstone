@@ -97,3 +97,6 @@ models/
 *.swp
 *.swo
 Thumbs.db
+
+compute/mobile/Habo/
+compute/mobile/.dart_tool/
