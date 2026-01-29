@@ -16,7 +16,7 @@ https://testdriven.io/blog/flask-pytest/#code-coverage
     - detect habit decay
     - recommend optimal reminder times
     - classify self-reported vs device habits
-- ActivityWatch data format
+- ActivityWatch data format (https://docs.activitywatch.net/en/latest/buckets-and-events.html)
 - [ ] pydantic/pytest?
 
 # HabitRepository
