@@ -4,7 +4,7 @@ import cv2
 from ultralytics import YOLO
 
 # Load pretrained YOLOv8 model
-model = YOLO("yolov8n.pt")  # nano model (fast)
+model = YOLO("C:\\Users\\Owner\\Documents\\Dev\\Capstone\\compute\\cv\\runs2\\content\\runs\\detect\\train\\weights\\best.pt")  # nano model (fast)
 
 # Open webcam (0 = default camera)
 cap = cv2.VideoCapture(0)
