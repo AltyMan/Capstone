@@ -6,12 +6,31 @@ from objects.rule import Rule
 from objects.habitrepository import HabitRepository
 from db.sqlite import get_connection
 
-# CRUD Operations
-
 class User:
-    
+    """
+    High-level user interface for managing habits, logs, and scheduling rules.
+
+    A `User` represents a single application user and provides a convenient,
+    user-scoped API for interacting with habit data without directly touching
+    the database layer. Internally, all operations are delegated to a
+    `HabitRepository` instance tied to this user's ID.
+
+    Responsibilities
+    ----------------
+    - Create and manage habits
+    - Record and retrieve habit logs
+    - Manage scheduling rules
+    - Provide a simple, clean wrapper around persistence logic
+
+    Notes
+    -----
+    - Each User instance is bound to exactly one `user_id`.
+    - Database access is handled by the underlying repository.
+    - This class acts as a service/facade layer rather than storing data itself.
+    """
     @staticmethod
     def create() -> "User":
+        """Create a new user row in the database and return a bound User instance."""
         with get_connection() as conn:
             cursor = conn.execute(
                 "INSERT INTO users DEFAULT VALUES;"

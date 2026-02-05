@@ -2,6 +2,48 @@ from flask import Blueprint, Response, request
 from objects.user import User
 from dataclasses import asdict
 
+"""
+Habits Blueprint (Flask)
+
+Provides HTTP endpoints for managing user habits through a simple REST-style API.
+
+This module exposes a Flask `Blueprint` that wraps the `User` service layer and
+allows clients to create, list, update, and delete habits associated with a
+specific user. All routes are scoped by `user_id`.
+
+Routes
+------
+POST   /<user_id>/habits/add
+    Add a new habit.
+
+GET    /<user_id>/habits
+    Retrieve all habits for the user.
+
+POST   /<user_id>/habits/update
+    Update a specific habit field.
+
+POST   /<user_id>/habits/delete
+    Delete a habit.
+
+Query Parameters
+----------------
+name : str
+    Habit name.
+device : bool, optional
+    Whether the habit is associated with a device.
+field : str
+    Column name to update (for updates).
+value : str
+    New value for the field.
+
+Notes
+-----
+- Delegates business logic to the `User` class.
+- Returns JSON responses only.
+- Uses query parameters instead of request bodies for simplicity.
+"""
+
+
 habits_bp = Blueprint("habits", __name__)
 
 @habits_bp.post(f'/<int:user_id>/{habits_bp.name}/add')

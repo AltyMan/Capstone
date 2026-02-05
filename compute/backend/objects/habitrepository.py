@@ -10,6 +10,33 @@ from pandas import DataFrame
 import ddd
 
 class HabitRepository:
+    """
+    Persistence layer for managing a user's habits, logs, and scheduling rules.
+
+    This class wraps all database interactions related to habits and provides
+    CRUD-style operations for:
+
+    - Habits (create, update, delete, list)
+    - Habit logs (event history and state tracking)
+    - Rules (scheduled or inferred habit timing behavior)
+
+    Each instance is scoped to a single user via `user_id`, and all queries
+    automatically filter by that user.
+
+    Responsibilities
+    ----------------
+    - Store and retrieve `Habit` objects
+    - Record habit activity logs and return them as pandas DataFrames
+    - Manage `Rule` objects used for scheduling or automation
+    - Infer rules from historical timestamps (`generate_rules`)
+
+    Notes
+    -----
+    - Uses `get_connection()` context managers for safe DB access.
+    - Some update methods dynamically inject column names; callers should
+      ensure field names are trusted to avoid SQL injection risks.
+    - Log queries return an empty DataFrame when no results are found.
+    """
     def __init__(self, user_id: int):
         self.user_id = user_id
 
