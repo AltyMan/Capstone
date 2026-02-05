@@ -27,8 +27,11 @@ def get_logs(user_id: int):
     
     df: pd.DataFrame = user.get_habit_logs(habit_name)
     
+    if df is None:
+        df = pd.DataFrame()
+    
     return {
-        df.to_json(orient="records")
+        "result" : df.to_dict(orient="records")
     }, 200
 
 @logs_bp.post(f'/<int:user_id>/{logs_bp.name}/update')

@@ -178,7 +178,7 @@ class HabitRepository:
                 """
                 DELETE FROM habit_rules
                 WHERE user_id = ?
-                AND name = ?
+                AND habit_id = ?
                 """,
                 (self.user_id, habit)
             )

@@ -28,7 +28,7 @@ def get_rules(user_id: int):
     rule_list = user.get_rules()
     
     return {
-        rule_list
+        "result" : rule_list
     }, 200
 
 @rules_bp.post(f'/<int:user_id>/{rules_bp.name}/update')
@@ -49,7 +49,7 @@ def post_delete_rule(user_id: int):
     
     habit_name: str = request.args.get('habit')
     
-    user.delete_rule(habit_name)
+    user.delete_rule(f"{user.id}_{habit_name}_test")
     
     return {
         "result" : f"Successfully deleted all habit rules associated with habit {habit_name}"

@@ -16,6 +16,6 @@ def get_user_info(user_id: int):
     
     return {
         "habits" : habit_list,
-        "logs" : log_list.to_json(),
+        "logs" : log_list.to_dict(),
         "rules" : rule_list
     }, 200
