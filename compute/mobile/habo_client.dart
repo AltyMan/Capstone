@@ -30,6 +30,18 @@ class HttpHabitRepository{
 
     return 1; // backend does not return ID
   }
+
+  Future<int> getUserInfo() async {
+    final response = await http.post(
+      _uri('/')
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to get user information");
+    }
+
+    return 1;
+  }
 }
 
 Future<void> main() async {
