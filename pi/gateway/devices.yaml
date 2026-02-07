@@ -1,0 +1,18 @@
+devices:
+  plug1:
+    type: plug
+    vendor: kasa
+    internal:
+      cmd_topic: "/hs105/switch"
+      state_topic: "/hs105/switch"
+
+  plug2:
+    type: plug
+    vendor: shelly
+    internal:
+      cmd_topic: "shellyplugusg4/command/switch:0"
+      state_topic: "shellyplugusg4/status/switch:0"
+      poll:
+        topic: "shellyplugusg4/command"
+        payload: "status_update"
+        interval_s: 2

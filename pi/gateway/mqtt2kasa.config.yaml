@@ -1,0 +1,11 @@
+mqtt:
+  host: 127.0.0.1
+  port: 1883
+
+globals:
+  topic_format: /{}/switch
+  poll_interval: 10
+
+locations:
+  hs105:
+    host: 192.168.0.193
