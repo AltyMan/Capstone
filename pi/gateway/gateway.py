@@ -102,7 +102,7 @@ def load_registry(path: str) -> Dict[str, Any]:
 
     return data
 
-
+@DeprecationWarning
 class Gateway:
     def __init__(self) -> None:
         self.registry = load_registry(REGISTRY_PATH)
