@@ -1,0 +1,3 @@
+[submodule "compute/mobile/Habo"]
+	path = compute/mobile/Habo
+	url = https://github.com/Supercobra27/Habo.git
