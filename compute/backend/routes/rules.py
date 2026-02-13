@@ -3,6 +3,35 @@ from objects.user import User
 from objects.rule import Rule
 from dataclasses import asdict
 
+"""
+Rules Blueprint (Flask)
+
+Provides HTTP endpoints for managing habit scheduling rules.
+
+INTEGRATION NOTES FOR HABO (Flutter) FRONTEND
+-----------------------------------------------
+The current `/rules` routes use a `Rule` dataclass that matches Habo's basic
+rule concept (day, hour, minute, active), but Habo does NOT currently have
+an HTTP repository implementation for rules.
+
+The mobile app's `HabitsManager` uses rules for notifications/reminders, but
+these are currently stored only in SQLite via `HaboModel` and not exposed
+through any HTTP API.
+
+If you want to sync rules to the backend in the future:
+  - The `objects.rule.Rule` dataclass structure is compatible with what Habo
+    would need (day, hour, minute, active).
+  - You would need to create an `HttpRuleRepository` in the Flutter app that
+    mirrors the pattern used by `HttpHabitRepository`.
+  - The routes here (`/<user_id>/rules/add`, `/<user_id>/rules`, etc.) could
+    be used as-is, but you'd need to ensure rules are tied to habit IDs (not
+    just habit names) for proper foreign key relationships.
+
+NOTE: Habo's notification system uses rules internally, but the app does not
+currently expose rule management through the UI in a way that would require
+backend sync. Rules are typically auto-generated or managed locally.
+"""
+
 rules_bp = Blueprint("rules", __name__)
 
 @rules_bp.post(f'/<int:user_id>/{rules_bp.name}/add')

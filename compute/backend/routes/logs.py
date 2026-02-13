@@ -3,6 +3,40 @@ from objects.user import User
 from dataclasses import asdict
 import pandas as pd
 
+"""
+Logs Blueprint (Flask)
+
+Provides HTTP endpoints for managing habit log entries.
+
+INTEGRATION NOTES FOR HABO (Flutter) FRONTEND
+-----------------------------------------------
+The current `/logs` routes are designed for a simpler log model (state strings,
+self_reported flags) and do NOT match Habo's event system.
+
+Habo uses a different concept called "Events" (see `mobile/Habo/lib/repositories/event_repository.dart`):
+  - Events are tied to a specific habit ID and a specific date (DateTime).
+  - Each event is a List containing:
+    - [0]: DayType enum (clear, check, fail, skip, progress)
+    - [1]: comment (string, optional)
+    - [2]: progressValue (double, optional, only for numeric habits with DayType.progress)
+
+The mobile app's `HttpEventRepository` expects routes under `/<user_id>/events`:
+  - POST   /<user_id>/events/add          (JSON body: {habitId, date, eventData})
+  - POST   /<user_id>/events/delete        (JSON body: {habitId, date})
+  - GET    /<user_id>/events/habit/<habit_id>
+  - GET    /<user_id>/events/habit/<habit_id>/map
+  - POST   /<user_id>/events/habit/<habit_id>/clear
+  - POST   /<user_id>/events/habit/<habit_id>/batch  (JSON body: {habitId, events: {date: eventData}})
+  - POST   /<user_id>/events/clear-all
+
+See `backend/HABO_API_SPECIFICATION.md` for the full event API specification.
+
+TODO (backend): Decide whether to:
+  1. Extend these `/logs` routes to also support Habo's event format, OR
+  2. Create new `/events` routes specifically for Habo and keep `/logs` for your
+     existing IoT/device logging use case.
+"""
+
 logs_bp = Blueprint("logs", __name__)
 
 @logs_bp.post(f'/<int:user_id>/{logs_bp.name}/add')
