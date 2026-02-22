@@ -58,4 +58,4 @@ def home():
     return "One day of singing. Yeah, yeah."
 
 if __name__ == "__main__":
-    app.run(host="192.168.2.19", port=5000)
+    app.run(host="127.0.0.1", port=5000)
