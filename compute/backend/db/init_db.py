@@ -12,6 +12,7 @@ def init_db():
             user_id INTEGER NOT NULL,
             habit_full_id TEXT,
             mqtt_topic TEXT,
+            assoc_dev_id TEXT,
             name TEXT NOT NULL,
             is_device BOOLEAN DEFAULT 0,
             FOREIGN KEY(user_id) REFERENCES users(id)
