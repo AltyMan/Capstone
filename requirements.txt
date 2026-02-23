@@ -1,0 +1,8 @@
+sounddevice
+queue
+time
+json
+numpy
+pathlib
+vosk
+openwakeword>=0.6

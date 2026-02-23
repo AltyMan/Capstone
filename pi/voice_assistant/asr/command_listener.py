@@ -5,7 +5,6 @@ from pathlib import Path
 from vosk import Model, KaldiRecognizer
 from openwakeword.model import Model as WakeModel
 from openwakeword.utils import download_models
-import wave, sys
 
 # Diagnostics
 print("SoundDevice default.device:", sd.default.device)

@@ -1,0 +1,86 @@
+{
+  "devices": {
+    "living room light": {
+      "primary": "living_room_light",
+      "aliases": ["living room", "living room lights", "living room lamp"]
+    },
+    "bedroom light": {
+      "primary": "bedroom_light",
+      "aliases": ["bedroom", "bedroom lights", "bedroom lamp"]
+    },
+    "kitchen light": {
+      "primary": "kitchen_light",
+      "aliases": ["kitchen", "kitchen lights", "kitchen lamp"]
+    },
+    "plug1": {
+      "primary": "plug1",
+      "aliases": ["plug one", "plug 1", "first plug"]
+    },
+    "plug2": {
+      "primary": "plug2",
+      "aliases": ["plug two", "plug 2", "second plug"]
+    }
+  },
+  "actions": [
+    {
+      "pattern": "turn\\s+(?:on|up)\\s+(?:the\\s+)?(.+)",
+      "action": "set",
+      "command": "on",
+      "description": "Turn on a device"
+    },
+    {
+      "pattern": "turn\\s+off\\s+(?:the\\s+)?(.+)",
+      "action": "set",
+      "command": "off",
+      "description": "Turn off a device"
+    },
+    {
+      "pattern": "switch\\s+on\\s+(?:the\\s+)?(.+)",
+      "action": "set",
+      "command": "on",
+      "description": "Switch on a device"
+    },
+    {
+      "pattern": "switch\\s+off\\s+(?:the\\s+)?(.+)",
+      "action": "set",
+      "command": "off",
+      "description": "Switch off a device"
+    },
+    {
+      "pattern": "switch\\s+(?:the\\s+)?(.+)\\s+on",
+      "action": "set",
+      "command": "on",
+      "description": "Switch a device on"
+    },
+    {
+      "pattern": "switch\\s+(?:the\\s+)?(.+)\\s+off",
+      "action": "set",
+      "command": "off",
+      "description": "Switch a device off"
+    },
+    {
+      "pattern": "toggle\\s+(?:the\\s+)?(.+)",
+      "action": "toggle",
+      "command": "toggle",
+      "description": "Toggle a device"
+    },
+    {
+      "pattern": "flip\\s+(?:the\\s+)?(.+)",
+      "action": "toggle",
+      "command": "toggle",
+      "description": "Flip (toggle) a device"
+    },
+    {
+      "pattern": "(?:what'?s|get|check)\\s+(?:the\\s+)?(?:status|state)\\s+of\\s+(?:the\\s+)?(.+)",
+      "action": "get",
+      "command": null,
+      "description": "Get the status of a device"
+    },
+    {
+      "pattern": "is\\s+(?:the\\s+)?(.+)\\s+(?:on|off)\\??",
+      "action": "get",
+      "command": null,
+      "description": "Check if a device is on or off"
+    }
+  ]
+}
