@@ -69,7 +69,7 @@ class User:
     def add_rule(self, habit_id: str, rule: Rule):
         self.repo.add_rule(habit_id, rule)
         
-    def get_rules(self) -> list[Rule]:
+    def get_rules(self) -> list[dict[str, object]]:
         return self.repo.get_rules()
     
     def update_rule(self, habit: str):

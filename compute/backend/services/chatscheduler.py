@@ -16,12 +16,7 @@ def test_job_func(user_id: int, habit_id: int):
 class HabitScheduler:
 
     def __init__(self):
-        # Use proper timezone (handles DST correctly)
         self.scheduler = BackgroundScheduler(timezone=ZoneInfo("America/Toronto"))
-
-    # ------------------------
-    # Core lifecycle
-    # ------------------------
 
     def start(self):
         if not self.scheduler.running:
@@ -31,10 +26,7 @@ class HabitScheduler:
         if self.scheduler.running:
             self.scheduler.shutdown()
 
-    # ------------------------
-    # Internal helpers
-    # ------------------------
-
+    # Needs to be changed
     def _build_job_id(self, user_id: int, habit_id: int) -> str:
         return f"{user_id}:{habit_id}"
 
@@ -46,10 +38,6 @@ class HabitScheduler:
             timezone=self.scheduler.timezone
         )
 
-    # ------------------------
-    # Public API
-    # ------------------------
-
     def schedule_habit(self, user_id: int, habit_id: int | str):
         """
         Schedule a habit based on DB rule.
@@ -60,7 +48,7 @@ class HabitScheduler:
                 SELECT day, hour, minute
                 FROM habit_rules
                 WHERE user_id = ?
-                AND habit_id = ?
+                AND habit_name = ?
             """, (user_id, habit_id)).fetchone()
 
             if not row:
@@ -74,8 +62,6 @@ class HabitScheduler:
             minute=row["minute"]
         )
         
-        print(f"Day: {row['day']}, Hour: {row['hour']}, Minute: {row['minute']}")
-
         self.scheduler.add_job(
             func=test_job_func,
             trigger=trigger,
@@ -89,7 +75,7 @@ class HabitScheduler:
                 UPDATE habit_rules
                 SET job_id = ?, active = 1
                 WHERE user_id = ?
-                AND habit_id = ?
+                AND habit_name = ?
             """, (job_id, user_id, habit_id))
             conn.commit()
 
@@ -112,7 +98,7 @@ class HabitScheduler:
                 UPDATE habit_rules
                 SET active = 0
                 WHERE user_id = ?
-                AND habit_id = ?
+                AND habit_name = ?
             """, (user_id, habit_id))
             conn.commit()
 
@@ -127,13 +113,13 @@ class HabitScheduler:
 
         with get_connection() as conn:
             rows = conn.execute("""
-                SELECT user_id, habit_id, day, hour, minute
+                SELECT user_id, habit_name, day, hour, minute
                 FROM habit_rules
                 WHERE active = 1
             """).fetchall()
 
         for r in rows:
-            job_id = self._build_job_id(r["user_id"], r["habit_id"])
+            job_id = self._build_job_id(r["user_id"], r["habit_name"])
 
             trigger = self._build_trigger(
                 day=r["day"],
@@ -145,7 +131,7 @@ class HabitScheduler:
                 func=test_job_func,
                 trigger=trigger,
                 id=job_id,
-                args=[r["user_id"], r["habit_id"]],
+                args=[r["user_id"], r["habit_name"]],
                 replace_existing=True
             )
 
