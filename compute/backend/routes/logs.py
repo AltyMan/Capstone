@@ -2,6 +2,7 @@ from flask import Blueprint, Response, request
 from objects.user import User
 from dataclasses import asdict
 import pandas as pd
+from enum import Enum
 
 """
 Logs Blueprint (Flask)
@@ -36,6 +37,13 @@ TODO (backend): Decide whether to:
   2. Create new `/events` routes specifically for Habo and keep `/logs` for your
      existing IoT/device logging use case.
 """
+
+class DayType(Enum):
+    CLEAR = 0
+    CHECK = 1
+    FAIL = 2
+    SKIP = 3
+    PROGRESS = 4
 
 logs_bp = Blueprint("logs", __name__)
 

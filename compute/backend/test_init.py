@@ -2,7 +2,6 @@ import random
 from objects.user import User
 import pandas as pd
 from objects.rule import Rule
-from services.habitscheduler import HabitScheduler
 
 def habit_test():
     return       
