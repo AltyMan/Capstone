@@ -22,3 +22,10 @@ https://testdriven.io/blog/flask-pytest/#code-coverage
 # HabitRepository
 purpose is to segment responsibilites, Habit should not be a scheduler, datastore, and logger.
 https://github.com/vklap/py_ddd_framework
+
+## TO DO
+- [ ] FIX THE GODDAMN SYSTEM
+- [ ] Miro out how everything interacts, I think I lost the plot in this regard
+- [ ] Vibe code the app because its painful
+- [ ] Re-update schema, I realize its not good, Miro is a blocker for this
+- [ ] WRITE TESTS / SQL
