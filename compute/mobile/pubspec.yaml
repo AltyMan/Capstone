@@ -1,9 +1,0 @@
-name: habo_client
-description: Standalone Dart HTTP client for the Habo backend
-version: 0.1.0
-
-environment:
-  sdk: ">=3.2.0 <4.0.0"
-
-dependencies:
-  http: ^1.2.0

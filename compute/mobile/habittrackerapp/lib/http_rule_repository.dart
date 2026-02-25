@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'http_repository.dart';
-import 'rule.dart';
+import '../../rule.dart';
 
 class HttpRuleRepository extends HttpRepository<Rule> {
   HttpRuleRepository(super.userId);
