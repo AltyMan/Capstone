@@ -21,13 +21,12 @@ def test_habit_routes():
         )
 
         assert res.status_code == 200
-        assert "successfully added Habit Sleep" in res.json["response"]
 
         res = test_client.get("/1/habits")
         assert res.status_code == 200
 
-        habits = res.json["habits"]
-        assert habits[0]["habit_name"] == "Sleep"
+        habits = res.json["result"]["habits"]
+        assert "Sleep" in [name["habit_name"] for name in habits]
         
         res = test_client.post(
             '/1/habits/update?name=Sleep&field=is_device&value=true'

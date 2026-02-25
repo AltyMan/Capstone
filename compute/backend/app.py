@@ -3,7 +3,7 @@ from routes.habits import habits_bp
 from routes.logs import logs_bp
 from routes.rules import rules_bp
 from routes.users import users_bp
-from test_init import *
+from services.chatscheduler import HabitScheduler
 from db.init_db import init_db
 
 """
@@ -58,4 +58,8 @@ def home():
     return "One day of singing. Yeah, yeah."
 
 if __name__ == "__main__":
-    app.run(host="192.168.2.19", port=5000)
+    sch = HabitScheduler()
+    sch.start()
+    sch.schedule_habit(1, "Bonger")
+    sch.print_active_jobs(1)
+    app.run(host="127.0.0.1", port=5000)

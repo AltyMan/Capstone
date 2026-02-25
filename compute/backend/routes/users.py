@@ -35,6 +35,6 @@ def get_user_info(user_id: int):
     
     return {
         "habits" : habit_list,
-        "logs" : log_list.to_dict(),
+        "logs" : log_list.to_dict(orient="records"),
         "rules" : rule_list
     }, 200

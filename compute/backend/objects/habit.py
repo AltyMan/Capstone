@@ -50,7 +50,7 @@ class Habit:
     """
 
     habit_name: str = ""
-    assoc_dev_id = None
+    assoc_dev_id: str = ""
     assoc_mqtt_topic: str = ""
     habit_id: str | None = None
     is_device: bool = True

@@ -11,7 +11,7 @@ def test_job_func(text):
     print(f"Hello {text}!")
 
 @_SingletonWrapper.singleton
-class HabitScheduler:
+class HabitScheduler2:
     scheduler = BackgroundScheduler(timezone="EST")
     
     def __init__(self):
@@ -23,7 +23,8 @@ class HabitScheduler:
     def schedule_habit(self, user_id: int, habit_id: int):
         self.scheduler.add_job(
             func=test_job_func,
-            trigger=CronTrigger()
+            trigger=CronTrigger(),
+            args=["world"]
         )
     
     def reschedule_habit(self, user_id: int):

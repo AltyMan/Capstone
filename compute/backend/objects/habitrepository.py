@@ -43,7 +43,7 @@ class HabitRepository:
     def add(self, habit_name: str, is_device: bool = False):
         with get_connection() as conn:
             conn.execute(
-                "INSERT INTO habits (user_id, name, is_device) VALUES (?, ?, ?)",
+                "INSERT INTO habits (user_id, habit_name, is_device) VALUES (?, ?, ?)",
                 (self.user_id, habit_name, int(is_device))
             )
 
@@ -57,9 +57,11 @@ class HabitRepository:
         habits: list[Habit] = [] 
         for r in rows:
             h = Habit(
-                habit_name = r['name'],
+                habit_name = r['habit_name'],
                 is_device=bool(r['is_device']),
-                assoc_mqtt_topic=r['mqtt_topic']
+                assoc_mqtt_topic=r['mqtt_topic'],
+                assoc_dev_id=r['assoc_dev_id'],
+                habit_id=r['habit_full_id'],
             )
             habits.append(h)
             
@@ -72,7 +74,7 @@ class HabitRepository:
                 UPDATE habits
                 SET {field} = ?
                 WHERE user_id = ?
-                AND name = ?
+                AND habit_name = ?
                 """,
                 (value, self.user_id, habit)
             )
@@ -83,7 +85,7 @@ class HabitRepository:
                 """
                 DELETE FROM habits
                 WHERE user_id = ?
-                AND name = ?
+                AND habit_name = ?
                 """,
                 (self.user_id, habit,)
             )
@@ -145,13 +147,13 @@ class HabitRepository:
         with get_connection() as conn:
             conn.execute(
                 """
-                INSERT INTO habit_rules (user_id, job_id, habit_id, day, hour, minute, count, active)
+                INSERT INTO habit_rules (user_id, job_id, habit_name, day, hour, minute, count, active)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (self.user_id, f"{self.user_id}_job_test", f"{self.user_id}_{habit_id}_test", rule.day, rule.hour, rule.minute, 1, rule.active)
             )
         
-    def get_rules(self) -> list[Rule]:
+    def get_rules(self) -> list[dict[str, object]]:
         with get_connection() as conn:
             rows = conn.execute(
                 """
@@ -159,7 +161,12 @@ class HabitRepository:
                 """,
                 (self.user_id,)
             ).fetchall()
-            return [Rule(r['day'], r['hour'], r['minute'], r['active']) for r in rows]
+
+            return [{"rule" : Rule(r['day'], r['hour'], r['minute'], r['active']),
+                     "job_id" : r['job_id'],
+                     "habit_name" : r['habit_name']
+                     } 
+                    for r in rows]
         
     def upsert_rule(self, habit: str):
         with get_connection() as conn:
@@ -167,7 +174,7 @@ class HabitRepository:
              """
              UPDATE habit_rules
              SET day = 0, hour = 0, minute = 0
-             WHERE user_id = ? AND habit_id = ?
+             WHERE user_id = ? AND habit_name = ?
              """,
              (self.user_id,f"{self.user_id}_{habit}_test")
             )
@@ -178,15 +185,12 @@ class HabitRepository:
                 """
                 DELETE FROM habit_rules
                 WHERE user_id = ?
-                AND habit_id = ?
+                AND habit_name = ?
                 """,
                 (self.user_id, habit)
             )
         return
-    
-    """
-    habit_id is AN INTEGER, not a string, will break when FKs are enforced.
-    """
+
     def generate_rules(self):
         with get_connection() as conn:
             rows = conn.execute(
@@ -220,7 +224,7 @@ class HabitRepository:
                 
                     conn.execute(
                         """
-                        INSERT INTO habit_rules (user_id, job_id, habit_id, day, hour, minute, count, active)
+                        INSERT INTO habit_rules (user_id, job_id, habit_name, day, hour, minute, count, active)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                         """,
                         (self.user_id,f"{self.user_id}_{name}_{rule.day}_test",f"{self.user_id}_{name}_test", rule.day, rule.hour, rule.minute, 1, int(rule.active))
