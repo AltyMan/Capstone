@@ -53,6 +53,9 @@ def post_add_habit(user_id: int):
     user = User(user_id)
     habit_name: str = request.args.get('name')
     is_device: bool = request.args.get('device', type=bool)
+    assoc_dev_id: str = request.args.get('adi') # assoc_dev_id
+    mqtt_topic: str = request.args.get('mqtt')
+    hfi: str = request.args.get('hfi') # habit_full_id
 
     if is_device is None:
         is_device = False
@@ -76,9 +79,11 @@ def get_habits(user_id: int):
     # because we use `asdict`. The Flutter side currently ignores unknown
     # keys, so extending the schema is backwards compatible.
     return {
-        "habits": [
-            asdict(h) for h in user.get_habits()
-        ]
+        "result" : {
+            "habits": [
+                asdict(h) for h in user.get_habits()
+            ]
+        }
     }, 200
 
 
