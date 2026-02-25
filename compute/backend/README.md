@@ -33,3 +33,4 @@ https://github.com/vklap/py_ddd_framework
 - [ ] Verify Routes
 - [ ] Get CV response (maybe retrain on transfer to ignore humans)
 - [ ] NextJS frontend? Or other option
+- [ ] How do I schedule jobs?
