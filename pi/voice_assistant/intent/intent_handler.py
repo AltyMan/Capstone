@@ -8,6 +8,7 @@ import re
 from enum import Enum
 from pathlib import Path
 import json
+import socket
 
 
 class IntentAction(Enum): # enum for supported actions
@@ -169,20 +170,43 @@ def parse_intent(speech: str) -> Intent: # parse intent, return intent object fr
     return get_parser().parse(speech)
 
 
-if __name__ == "__main__": # tester
-    parser = IntentParser()
-    test_cases = [
-        "Turn on the bedroom lights",
-        "Switch off the living room lamp",
-        "Toggle the kitchen light",
-        "Turn on plug one",
-        "What's the status of the bedroom light?",
-        "Is the kitchen light on?",
-        "Turn on the bathroom fan",  # Unknown device
-        "Play some music",  # Unknown action
-    ]
-    print("Intent Parser Test Cases:\n")
-    for speech in test_cases:
-        intent = parser.parse(speech)
-        print(f"Speech: \"{speech}\"")
-        print(f"{intent}\n")
+def run_intent_server(host: str = "127.0.0.1", port: int = 9090) -> None:
+    parser = get_parser()
+    print(f"Intent server listening on {host}:{port}...")
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server.bind((host, port))
+        server.listen()
+
+        while True:
+            conn, addr = server.accept()
+            with conn:
+                print(f"Intent client connected: {addr}")
+                buf = b""
+                while True:
+                    data = conn.recv(4096)
+                    if not data:
+                        break
+
+                    buf += data
+                    while b"\n" in buf:
+                        line, buf = buf.split(b"\n", 1)
+                        if not line.strip():
+                            continue
+
+                        try:
+                            payload = json.loads(line.decode("utf-8"))
+                            speech = str(payload.get("text", "")).strip()
+                            if not speech:
+                                continue
+
+                            intent = parser.parse(speech)
+                            print(f"Speech: \"{speech}\"")
+                            print(f"{intent}")
+                        except json.JSONDecodeError:
+                            print("Warning: Received invalid JSON payload")
+
+
+if __name__ == "__main__":
+    run_intent_server()
