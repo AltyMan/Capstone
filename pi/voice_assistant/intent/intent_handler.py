@@ -182,7 +182,7 @@ def std_set_topic(device_id: str) -> str:
 
 
 def publish_intent_to_mqtt(client: mqtt.Client, intent: Intent) -> None:
-    # For now, broadcast actionable commands to the two known plugs.
+    # Route to a specific plug if parsed; otherwise broadcast to both plugs.
     if intent.action == IntentAction.SET and intent.command in ("on", "off"):
         command = intent.command
     elif intent.action == IntentAction.TOGGLE:
@@ -190,7 +190,12 @@ def publish_intent_to_mqtt(client: mqtt.Client, intent: Intent) -> None:
     else:
         return
 
-    for device_id in TARGET_PLUGS:
+    if intent.device in TARGET_PLUGS:
+        target_devices = (intent.device,)
+    else:
+        target_devices = TARGET_PLUGS
+
+    for device_id in target_devices:
         topic = std_set_topic(device_id)
         client.publish(topic, command, qos=0, retain=False)
         print(f"[MQTT] {topic} <- {command}")
