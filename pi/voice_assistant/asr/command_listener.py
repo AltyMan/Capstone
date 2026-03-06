@@ -15,7 +15,6 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 VOSK_MODEL_PATH = SCRIPT_DIR / "models" / "en-us"  # your local Vosk model
 
 vosk_model = Model(str(VOSK_MODEL_PATH))
-recognizer = KaldiRecognizer(vosk_model, SAMPLE_RATE)
 
 
 def send_to_intent_handler(text: str) -> None:
@@ -30,6 +29,9 @@ def send_to_intent_handler(text: str) -> None:
 
 def process_audio_stream(conn):
     print("🎧 Listening for speech...")
+
+    # Create a fresh recognizer for this connection to avoid stale state on reconnects
+    recognizer = KaldiRecognizer(vosk_model, SAMPLE_RATE)
 
     while True:
         data = conn.recv(PACKET_SIZE)
