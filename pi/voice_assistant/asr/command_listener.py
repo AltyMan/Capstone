@@ -32,22 +32,35 @@ def process_audio_stream(conn):
 
     # Create a fresh recognizer for this connection to avoid stale state on reconnects
     recognizer = KaldiRecognizer(vosk_model, SAMPLE_RATE)
+    
+    # Set a timeout so recv doesn't block forever on disconnect
+    conn.settimeout(5.0)
 
-    while True:
-        data = conn.recv(PACKET_SIZE)
-        if not data:
-            print("Connection closed by client")
-            break
+    try:
+        while True:
+            try:
+                data = conn.recv(PACKET_SIZE)
+            except socket.timeout:
+                print("[INFO] Socket timeout, checking connection...")
+                continue
+            
+            if not data:
+                print("Connection closed by client")
+                break
 
-        if recognizer.AcceptWaveform(data):
-            text = json.loads(recognizer.Result()).get("text", "").strip()
-            if text:
-                print(f"➡️ Command: {text}")
-                send_to_intent_handler(text)
-        else:
-            partial = json.loads(recognizer.PartialResult()).get("partial", "").strip()
-            if partial:
-                print(f"Partial: {partial}")
+            if recognizer.AcceptWaveform(data):
+                text = json.loads(recognizer.Result()).get("text", "").strip()
+                if text:
+                    print(f"➡️ Command: {text}")
+                    send_to_intent_handler(text)
+            else:
+                partial = json.loads(recognizer.PartialResult()).get("partial", "").strip()
+                if partial:
+                    print(f"Partial: {partial}")
+    except Exception as e:
+        print(f"[ERROR] Audio stream processing error: {e}")
+    finally:
+        print("[INFO] Cleaning up connection...")
 
 
 def main():
