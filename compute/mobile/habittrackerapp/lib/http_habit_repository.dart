@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import '../../http_repository.dart';
 import 'habit.dart';
 
