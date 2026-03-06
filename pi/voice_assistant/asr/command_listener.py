@@ -34,15 +34,15 @@ def process_audio_stream(conn):
     recognizer = KaldiRecognizer(vosk_model, SAMPLE_RATE)
     
     # Set a timeout so recv doesn't block forever on disconnect
-    conn.settimeout(5.0)
+    conn.settimeout(1.0)
 
     try:
         while True:
             try:
                 data = conn.recv(PACKET_SIZE)
             except socket.timeout:
-                print("[INFO] Socket timeout, checking connection...")
-                continue
+                print("[INFO] Socket timeout, connection lost")
+                break
             
             if not data:
                 print("Connection closed by client")
