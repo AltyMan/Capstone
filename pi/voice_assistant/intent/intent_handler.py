@@ -9,6 +9,13 @@ from enum import Enum
 from pathlib import Path
 import json
 import socket
+import time
+import paho.mqtt.client as mqtt
+
+
+MQTT_BROKER_HOST = "127.0.0.1"
+MQTT_BROKER_PORT = 1883
+TARGET_PLUGS = ("plug1", "plug2")
 
 
 class IntentAction(Enum): # enum for supported actions
@@ -170,42 +177,71 @@ def parse_intent(speech: str) -> Intent: # parse intent, return intent object fr
     return get_parser().parse(speech)
 
 
+def std_set_topic(device_id: str) -> str:
+    return f"/home/{device_id}/set"
+
+
+def publish_intent_to_mqtt(client: mqtt.Client, intent: Intent) -> None:
+    # For now, broadcast actionable commands to the two known plugs.
+    if intent.action == IntentAction.SET and intent.command in ("on", "off"):
+        command = intent.command
+    elif intent.action == IntentAction.TOGGLE:
+        command = "toggle"
+    else:
+        return
+
+    for device_id in TARGET_PLUGS:
+        topic = std_set_topic(device_id)
+        client.publish(topic, command, qos=0, retain=False)
+        print(f"[MQTT] {topic} <- {command}")
+
+
 def run_intent_server(host: str = "127.0.0.1", port: int = 9090) -> None:
     parser = get_parser()
     print(f"Intent server listening on {host}:{port}...")
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
-        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server.bind((host, port))
-        server.listen()
+    mqtt_client = mqtt.Client(client_id=f"intent-handler-{int(time.time())}")
+    mqtt_client.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, keepalive=60)
+    mqtt_client.loop_start()
+    print(f"MQTT connected to {MQTT_BROKER_HOST}:{MQTT_BROKER_PORT}")
 
-        while True:
-            conn, addr = server.accept()
-            with conn:
-                print(f"Intent client connected: {addr}")
-                buf = b""
-                while True:
-                    data = conn.recv(4096)
-                    if not data:
-                        break
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
+            server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            server.bind((host, port))
+            server.listen()
 
-                    buf += data
-                    while b"\n" in buf:
-                        line, buf = buf.split(b"\n", 1)
-                        if not line.strip():
-                            continue
+            while True:
+                conn, addr = server.accept()
+                with conn:
+                    print(f"Intent client connected: {addr}")
+                    buf = b""
+                    while True:
+                        data = conn.recv(4096)
+                        if not data:
+                            break
 
-                        try:
-                            payload = json.loads(line.decode("utf-8"))
-                            speech = str(payload.get("text", "")).strip()
-                            if not speech:
+                        buf += data
+                        while b"\n" in buf:
+                            line, buf = buf.split(b"\n", 1)
+                            if not line.strip():
                                 continue
 
-                            intent = parser.parse(speech)
-                            print(f"Speech: \"{speech}\"")
-                            print(f"{intent}")
-                        except json.JSONDecodeError:
-                            print("Warning: Received invalid JSON payload")
+                            try:
+                                payload = json.loads(line.decode("utf-8"))
+                                speech = str(payload.get("text", "")).strip()
+                                if not speech:
+                                    continue
+
+                                intent = parser.parse(speech)
+                                print(f"Speech: \"{speech}\"")
+                                print(f"{intent}")
+                                publish_intent_to_mqtt(mqtt_client, intent)
+                            except json.JSONDecodeError:
+                                print("Warning: Received invalid JSON payload")
+    finally:
+        mqtt_client.loop_stop()
+        mqtt_client.disconnect()
 
 
 if __name__ == "__main__":

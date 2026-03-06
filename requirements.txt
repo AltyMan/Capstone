@@ -6,3 +6,4 @@ numpy
 pathlib
 vosk
 openwakeword>=0.6
+paho-mqtt
