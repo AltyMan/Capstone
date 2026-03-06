@@ -5,7 +5,6 @@ import numpy as np
 from pathlib import Path
 from vosk import Model, KaldiRecognizer
 from openwakeword.model import Model as WakeModel
-from openwakeword.utils import download_models
 
 # Config
 HOST = "0.0.0.0"  # Listen on all available interfaces
@@ -19,8 +18,6 @@ COMMAND_TIMEOUT = 6  # seconds after wake word to listen for commands
 WAKE_THRESHOLD = 0.5  # temporary low threshold for testing (raise later)
 
 print("🔍 Checking for 'hey_jarvis' wake word model...")
-download_models(model_names=["hey_jarvis"])  # downloads to openwakeword's internal resources if missing
-
 # Initialization
 wake = WakeModel(wakeword_models=["hey_jarvis"])  # model name only → uses resource directory
 print("🎙 OpenWakeWord ready with 'hey_jarvis'")
