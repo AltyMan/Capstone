@@ -56,7 +56,7 @@ def post_add_habit(user_id: int):
     assoc_dev_id: str = request.args.get('adi') # assoc_dev_id
     mqtt_topic: str = request.args.get('mqtt')
     hfi: str = request.args.get('hfi') # habit_full_id
-
+    
     if is_device is None:
         is_device = False
 
