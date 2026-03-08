@@ -30,7 +30,7 @@ class Log {
         return {
         'name': habit_name,
         'state': state,
-        'reported': self_reported,
+        'reported': self_reported.toString(),
         };
     }
 }

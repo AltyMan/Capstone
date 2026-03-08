@@ -1,14 +1,16 @@
 import './http_habit_repository.dart';
 import './http_rule_repository.dart';
+import './http_logs_repository.dart';
 import './habit.dart';
 import './rule.dart';
-
+import './log.dart';
 
 // Still need to test Update/Delete (Have no actual delete routes)
 
 Future<void> main() async {
   final habitRepo = HttpHabitRepository(1);
   final ruleRepo = HttpRuleRepository(1);
+  final logRepo = HttpLogRepository(1);
 
   // Habit Block
   try {
@@ -35,5 +37,14 @@ Future<void> main() async {
   }
 
   // Log Block
+  try {
+  Log tester = Log(id: 1, user_id: 1, habit_name: "Tester", state: "on", self_reported: true, timestamp: "Jan 1st 2030");
+    await logRepo.create(tester);
+    print('Log created successfully!');
+    await logRepo.read();
+    print('Logs read sucessfully!');
+  } catch (e) {
+    print('Log Error: $e');
+  }
   // User Block
 }
