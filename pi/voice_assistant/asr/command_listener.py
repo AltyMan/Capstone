@@ -1,123 +1,79 @@
-import sounddevice as sd
-import queue, time, json
-import numpy as np
+import socket
+import json
 from pathlib import Path
 from vosk import Model, KaldiRecognizer
-from openwakeword.model import Model as WakeModel
-from openwakeword.utils import download_models
-
-# Diagnostics
-print("SoundDevice default.device:", sd.default.device)
-print("SoundDevice default.samplerate:", sd.default.samplerate)
-try:
-    print("Available devices (brief):")
-    for i, d in enumerate(sd.query_devices()):
-        print(f"  {i}: {d['name']} (max_in:{d['max_input_channels']}, default_samplerate:{d['default_samplerate']})")
-except Exception as e:
-    print("Could not query devices:", e)
 
 # Config
+HOST = "0.0.0.0"  # Listen on all available interfaces
+PORT = 8080
+SAMPLE_RATE = 16000  # Expected input: mono, 16-bit PCM, 16kHz
+PACKET_SIZE = 4096
+INTENT_HOST = "127.0.0.1"  # intent_handler local server on the same Raspberry Pi
+INTENT_PORT = 9090
+
 SCRIPT_DIR = Path(__file__).resolve().parent
-VOSK_MODEL_PATH = SCRIPT_DIR / "models" / "en-us"   # your local Vosk model
-COMMAND_TIMEOUT = 6  # seconds after wake word to listen for commands
-
-print("🔍 Checking for 'hey_jarvis' wake word model...")
-download_models(model_names=["hey_jarvis"])  # downloads to openwakeword's internal resources if missing
-
-# Initialization
-wake = WakeModel(wakeword_models=["hey_jarvis"])  # model name only → uses resource directory
-print("🎙 OpenWakeWord ready with 'hey_jarvis'")
+VOSK_MODEL_PATH = SCRIPT_DIR / "models" / "en-us"  # your local Vosk model
 
 vosk_model = Model(str(VOSK_MODEL_PATH))
-recognizer = KaldiRecognizer(vosk_model, 16000)
-audio_queue = queue.Queue()
-
-# Audio callback
-_print_counter = 0
-def audio_callback(indata, frames, time_info, status):
-    global _print_counter
-    if status:
-        print("Audio status:", status)
-    # RawInputStream returns bytes, InputStream returns numpy array. Handle both.
-    if isinstance(indata, np.ndarray):
-        arr = indata.copy()
-    else:
-        arr = np.frombuffer(indata, dtype=np.float32).reshape(-1, 1)
-    arr = arr.flatten()
-    # compute RMS to see if mic is hearing anything
-    rms = float(np.sqrt(np.mean(arr.astype(np.float64) ** 2)))
-    _print_counter += 1
-    if _print_counter % 40 == 0:  # throttle prints
-        print(f"[mic] rms={rms:.6f} len={len(arr)}")
-    audio_queue.put((arr, rms))
 
 
-# Main loop
-def main():
-    print("🎧 Listening for wake word...")
+def send_to_intent_handler(text: str) -> None:
+    payload = {"text": text}
+    try:
+        with socket.create_connection((INTENT_HOST, INTENT_PORT), timeout=0.25) as intent_sock:
+            intent_sock.sendall((json.dumps(payload) + "\n").encode("utf-8"))
+    except OSError:
+        # Intent service is optional at runtime; listener keeps running if it is down.
+        pass
 
-    listening_for_command = False
-    command_start = 0
 
-    # Use explicit samplerate and mono channels. If your device supports different samplerate, change here.
-    SR = 16000
-    # buffer 1 second of audio before calling the wake model
-    buf = np.zeros(0, dtype=np.float32)
-    WAKE_THRESHOLD = 0.5  # temporary low threshold for testing (raise later)
+def process_audio_stream(conn):
+    print("🎧 Listening for speech...")
 
-    with sd.RawInputStream(samplerate=SR, blocksize=512, dtype='float32', channels=1, callback=audio_callback):
+    # Create a fresh recognizer for this connection to avoid stale state on reconnects
+    recognizer = KaldiRecognizer(vosk_model, SAMPLE_RATE)
+    
+    # Set a timeout so recv doesn't block forever on disconnect
+    conn.settimeout(1.0)
+
+    try:
         while True:
-            audio, rms = audio_queue.get()
-            # append incoming frame(s) to buffer
-            buf = np.concatenate((buf, audio.astype(np.float32)))
-            # process every full second (or change to model's expected window)
-            while buf.size >= SR:
-                chunk = buf[:SR]
-                buf = buf[SR:]
-                # try predict on float32 normalized input and on int16-scaled input
-                try:
-                    scores_f32 = wake.predict(chunk)
-                except Exception as e:
-                    scores_f32 = {}
-                try:
-                    i16 = (np.clip(chunk, -1.0, 1.0) * 32767).astype(np.int16)
-                    scores_i16 = wake.predict(i16)
-                except Exception as e:
-                    scores_i16 = {}
+            try:
+                data = conn.recv(PACKET_SIZE)
+            except socket.timeout:
+                print("[INFO] Socket timeout, connection lost")
+                break
+            
+            if not data:
+                print("Connection closed by client")
+                break
 
-                # show diagnostics: use the larger score of the two formats for decision
-                score_name = None
-                score_val = 0.0
-                for d in (scores_f32, scores_i16):
-                    for k, v in d.items():
-                        v_f = float(v)
-                        if v_f > score_val:
-                            score_val = v_f
-                            score_name = k
+            if recognizer.AcceptWaveform(data):
+                text = json.loads(recognizer.Result()).get("text", "").strip()
+                if text:
+                    print(f"➡️ Command: {text}")
+                    send_to_intent_handler(text)
+            else:
+                partial = json.loads(recognizer.PartialResult()).get("partial", "").strip()
+                if partial:
+                    print(f"Partial: {partial}")
+    except Exception as e:
+        print(f"[ERROR] Audio stream processing error: {e}")
+    finally:
+        print("[INFO] Cleaning up connection...")
 
-                print(f"[wake-debug] rms={rms:.4f} best={score_name}:{score_val:.6g} f32={scores_f32} i16={scores_i16}")
 
-                # detection (use whichever format gave best score)
-                if score_name and score_val >= WAKE_THRESHOLD and not listening_for_command:
-                    print("🟢 Wake word detected!")
-                    listening_for_command = True
-                    command_start = time.time()
-                    # optionally flush buf so command audio is fresh
-                    buf = np.zeros(0, dtype=np.float32)
-                    break
+def main():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
+        server.bind((HOST, PORT))
+        server.listen()
+        print(f"Listening for ESP32 audio stream on {HOST}:{PORT}...")
 
-            # Command recognition (same as before)
-            if listening_for_command:
-                # feed short frames to Vosk; ensure you pass int16 PCM
-                vosk_audio = (audio * 32767).astype(np.int16).tobytes()
-                if recognizer.AcceptWaveform(vosk_audio):
-                    text = json.loads(recognizer.Result()).get("text", "").strip()
-                    if text:
-                        print(f"➡️ Command: {text}")
-
-                if time.time() - command_start > COMMAND_TIMEOUT:
-                    listening_for_command = False
-                    print("\n🎧 Listening for wake word...")
+        while True:
+            conn, addr = server.accept()
+            with conn:
+                print(f"Connected by {addr}")
+                process_audio_stream(conn)
 
 
 if __name__ == "__main__":

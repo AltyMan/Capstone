@@ -23,6 +23,24 @@
   },
   "actions": [
     {
+      "pattern": "^lights$",
+      "action": "toggle",
+      "command": "toggle",
+      "description": "Toggle default lights (bedroom)"
+    },
+    {
+      "pattern": "^(lights)\\s+on$",
+      "action": "set",
+      "command": "on",
+      "description": "Turn default lights on (bedroom)"
+    },
+    {
+      "pattern": "^(lights)\\s+off$",
+      "action": "set",
+      "command": "off",
+      "description": "Turn default lights off (bedroom)"
+    },
+    {
       "pattern": "turn\\s+(?:on|up)\\s+(?:the\\s+)?(.+)",
       "action": "set",
       "command": "on",
