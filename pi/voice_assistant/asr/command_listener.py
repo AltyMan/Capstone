@@ -6,7 +6,7 @@ from vosk import Model, KaldiRecognizer
 # Config
 HOST = "0.0.0.0"  # Listen on all available interfaces
 PORT = 8080
-SAMPLE_RATE = 48000  # Expected input: mono, 16-bit PCM, 48kHz
+SAMPLE_RATE = 16000  # Expected input: mono, 16-bit PCM, 16kHz
 PACKET_SIZE = 4096
 INTENT_HOST = "127.0.0.1"  # intent_handler local server on the same Raspberry Pi
 INTENT_PORT = 9090
