@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'http_repository.dart';
-import '../../rule.dart';
+import './rule.dart';
 
 class HttpRuleRepository extends HttpRepository<Rule> {
   HttpRuleRepository(super.userId);
@@ -22,8 +22,10 @@ class HttpRuleRepository extends HttpRepository<Rule> {
       throw Exception('Failed to load rules');
     }
 
-    final List data = jsonDecode(res.body);
-    return data.map((e) => Rule.fromJson(e)).toList();
+    final Map<String, dynamic> data = jsonDecode(res.body);
+    print(data);
+    return <Rule>[];
+    // return data.map((e) => Rule.fromJson(e)).toList();
   }
 
   // Won't work

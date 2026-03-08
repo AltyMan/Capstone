@@ -58,8 +58,8 @@ def home():
     return "One day of singing. Yeah, yeah."
 
 if __name__ == "__main__":
-    sch = HabitScheduler()
-    sch.start()
-    sch.schedule_habit(1, "Bonger")
-    sch.print_active_jobs(1)
+   # sch = HabitScheduler()
+   # sch.start()
+   # sch.schedule_habit(1, "Bonger")
+   # sch.print_active_jobs(1)
     app.run(host="127.0.0.1", port=5000)

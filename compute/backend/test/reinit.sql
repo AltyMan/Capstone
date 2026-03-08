@@ -18,8 +18,7 @@ CREATE TABLE IF NOT EXISTS habits (
             habit_full_id TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
         );
-INSERT INTO habits (user_id, mqtt_topic, habit_name, is_device, assoc_dev_id)
-VALUES (1, "bing/bong", "Bonger", True, "hs105");
+INSERT INTO habits (user_id, mqtt_topic, habit_name, is_device, assoc_dev_id) VALUES (1, "bing/bong", "Bonger", True, "hs105");
 
 DROP TABLE IF EXISTS habit_rules;
 CREATE TABLE IF NOT EXISTS habit_rules (
@@ -35,8 +34,7 @@ CREATE TABLE IF NOT EXISTS habit_rules (
             FOREIGN KEY(user_id) REFERENCES users(id)
             FOREIGN KEY(user_id) REFERENCES habits(user_id)
         );
-INSERT INTO habit_rules (user_id, habit_name, day, hour, minute, count)
-VALUES (1, "Bonger", 0, 12, 32, 67);
+INSERT INTO habit_rules (user_id, habit_name, day, hour, minute, count) VALUES (1, "Bonger", 0, 12, 32, 67);
 
 DROP TABLE IF EXISTS habit_logs;
 CREATE TABLE IF NOT EXISTS habit_logs (
@@ -48,8 +46,7 @@ CREATE TABLE IF NOT EXISTS habit_logs (
             self_reported BOOLEAN,
             FOREIGN KEY(user_id) REFERENCES users(id)
         );
-INSERT INTO habit_logs (user_id, habit_name, timestamp, state, self_reported)
-VALUES (1, "Bonger", "2026-02-05 16:20:53", "ON", True);
+INSERT INTO habit_logs (user_id, habit_name, timestamp, state, self_reported) VALUES (1, "Bonger", "2026-02-05 16:20:53", "ON", True);
 
 SELECT * FROM habit_rules WHERE user_id = 1;
 SELECT * FROM habits WHERE user_id = 1;
