@@ -4,6 +4,7 @@ import './http_logs_repository.dart';
 import './habit.dart';
 import './rule.dart';
 import './log.dart';
+import './user.dart';
 
 // Still need to test Update/Delete (Have no actual delete routes)
 
@@ -46,5 +47,5 @@ Future<void> main() async {
   } catch (e) {
     print('Log Error: $e');
   }
-  // User Block
+  // User Block - Still needs implementation backend?
 }
