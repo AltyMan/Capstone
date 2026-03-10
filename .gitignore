@@ -85,6 +85,7 @@ pip-selfcheck.json
 # If wanting to track models in repo, remove and use Git LFS
 models/
 **/*.onnx
+**/*.onnx.json
 **/*.tflite
 **/*.pb
 **/*.h5
