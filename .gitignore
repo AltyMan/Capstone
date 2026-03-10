@@ -100,3 +100,5 @@ Thumbs.db
 
 compute/mobile/Habo/
 compute/mobile/.dart_tool/
+compute/backend/test/vosk-model-small-en-us-0.15_c_.zip
+compute/backend/test/vosk-model-small-en-us-0.15_c_/vosk-model-small-en-us-0.15

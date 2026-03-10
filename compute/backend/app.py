@@ -3,6 +3,7 @@ from routes.habits import habits_bp
 from routes.logs import logs_bp
 from routes.rules import rules_bp
 from routes.users import users_bp
+from routes.mqtt import mqtt_bp
 from services.chatscheduler import HabitScheduler
 from db.init_db import init_db
 
@@ -42,6 +43,7 @@ def create_app() -> Flask:
     app.register_blueprint(logs_bp)
     app.register_blueprint(rules_bp)
     app.register_blueprint(users_bp)
+    app.register_blueprint(mqtt_bp)
     
     # TODO (Habo): Register additional blueprints when implemented:
     # from routes.events import events_bp
@@ -53,6 +55,21 @@ def create_app() -> Flask:
 
 app = create_app()
 
+import subprocess
+
+def speak(text):
+    subprocess.run([
+        "piper",
+        "--model", "C:\\Users\\Owner\\Documents\\Dev\\Capstone\\compute\\backend\\routes\\en_US-lessac-high.onnx",
+        "--output_file", "out.wav"
+    ], input=text.encode())
+
+    subprocess.run([
+        "powershell",
+        "-c",
+        '(New-Object Media.SoundPlayer "out.wav").PlaySync();'
+    ])
+
 @app.get("/")
 def home():
     return "One day of singing. Yeah, yeah."
@@ -62,4 +79,5 @@ if __name__ == "__main__":
    # sch.start()
    # sch.schedule_habit(1, "Bonger")
    # sch.print_active_jobs(1)
-    app.run(host="127.0.0.1", port=5000)
+    speak("Turning on Amit Altman Certified Smart Home Capstone")
+    app.run(host="192.168.2.158", port=5000)
