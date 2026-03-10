@@ -19,10 +19,10 @@ class Log {
         return Log(
             id: json['id'],
             user_id: json['user_id'],
-            habit_name: json['habit_name'],
-            timestamp: json['timestamp'],
-            state: json['state'],
-            self_reported: json['self_reported'],
+            habit_name: json['habit_name'] ?? '',
+            timestamp: json['timestamp'] ?? '',
+            state: json['state'] ?? 'completed',
+            self_reported: json['self_reported'] == 1,
         );
     }
 

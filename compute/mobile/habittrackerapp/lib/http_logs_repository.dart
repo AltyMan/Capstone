@@ -36,6 +36,13 @@ class HttpLogRepository extends HttpRepository<Log> {
         );
         return res.statusCode == 200;
     }
+    
+    Future<bool> updateField(int id, String field, String value) async {
+    final res = await client.post(
+        uri('/update', {'id': id.toString(), 'field': field, 'value': value}),
+    );
+    return res.statusCode == 200;
+}
 
     @override
     Future<bool> delete(int id) async {

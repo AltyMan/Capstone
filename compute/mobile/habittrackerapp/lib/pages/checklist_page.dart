@@ -3,82 +3,108 @@ import '../http_logs_repository.dart';
 import '../log.dart';
 
 class ChecklistPage extends StatefulWidget {
-  const ChecklistPage({super.key});
+  final void Function(int completed, int total)? onCountChanged;
+  const ChecklistPage({super.key, this.onCountChanged});
 
   @override
   State<ChecklistPage> createState() => _ChecklistPageState();
 }
 
 class _ChecklistPageState extends State<ChecklistPage> {
-    final logRepo = HttpLogRepository(1);
-    Future<List<Log>> logs = logRepo.read(); 
-  final List<Map<String, dynamic>> _tasks = [
-    {'name': 'Morning Meditation', 'completed': true, 'time': '6:00 AM'},
-    {'name': 'Exercise', 'completed': true, 'time': '7:00 AM'},
-    {'name': 'Drink Water (8 glasses)', 'completed': false, 'time': 'Throughout day'},
-    {'name': 'Read for 30 minutes', 'completed': true, 'time': '8:00 PM'},
-    {'name': 'Journal', 'completed': false, 'time': '9:00 PM'},
-    {'name': 'Make Bed', 'completed': true, 'time': '6:30 AM'},
-    {'name': 'Practice Guitar', 'completed': false, 'time': '5:00 PM'},
-    {'name': 'Cook Healthy Meal', 'completed': true, 'time': '6:00 PM'},
-  ];
+  final logRepo = HttpLogRepository(1);
+  late Future<List<Log>> logs = logRepo.read();
+  List<Log> _tasks = [];
 
   @override
   Widget build(BuildContext context) {
-    final completedCount = _tasks.where((task) => task['completed']).length;
-    final totalCount = _tasks.length;
+    return FutureBuilder<List<Log>>(
+      future: logs,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
 
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          color: Theme.of(context).colorScheme.primaryContainer,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Daily Routine',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        if (_tasks.isEmpty) {
+          _tasks = snapshot.data!;
+        }
+
+        final completedCount = _tasks.where((log) => log.state == 'completed').length;
+        final totalCount = _tasks.length;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          widget.onCountChanged?.call(completedCount, totalCount);
+        });
+
+        return Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Daily Routine',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '$completedCount / $totalCount',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                ],
               ),
-              Text(
-                '$completedCount / $totalCount',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: _tasks.length,
-            itemBuilder: (context, index) {
-              final task = _tasks[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                child: CheckboxListTile(
-                  title: Text(
-                    task['name'],
-                    style: TextStyle(
-                      decoration: task['completed'] ? TextDecoration.lineThrough : null,
-                      color: task['completed'] ? Colors.grey : null,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _tasks.length,
+                itemBuilder: (context, index) {
+                  final log = _tasks[index];
+                  final isCompleted = log.state == 'completed';
+                  return Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    child: CheckboxListTile(
+                      title: Text(
+                        log.habit_name,
+                        style: TextStyle(
+                          decoration: isCompleted ? TextDecoration.lineThrough : null,
+                          color: isCompleted ? Colors.grey : null,
+                        ),
+                      ),
+                      subtitle: Text(log.timestamp),
+                      value: isCompleted,
+                      onChanged: (bool? value) async {
+                        final newState = (value ?? false) ? 'completed' : 'missed';
+                        final success = await logRepo.updateField(log.id, 'state', newState);
+                        if (success) {
+                          setState(() {
+                            _tasks[index] = Log(
+                              id: log.id,
+                              user_id: log.user_id,
+                              habit_name: log.habit_name,
+                              timestamp: log.timestamp,
+                              state: newState,
+                              self_reported: log.self_reported,
+                            );
+                          });
+                          final completed = _tasks.where((l) => l.state == 'completed').length;
+                          widget.onCountChanged?.call(completed, _tasks.length);
+                        }
+                      },
+                      secondary: Icon(
+                        isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+                        color: isCompleted ? Colors.green : Colors.grey,
+                      ),
                     ),
-                  ),
-                  subtitle: Text(task['time']),
-                  value: task['completed'],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      task['completed'] = value ?? false;
-                    });
-                  },
-                  secondary: Icon(
-                    task['completed'] ? Icons.check_circle : Icons.radio_button_unchecked,
-                    color: task['completed'] ? Colors.green : Colors.grey,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

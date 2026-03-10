@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final int completedCount;
+  final int totalCount;
+
+  const HomePage({
+    super.key,
+    this.completedCount = 0,
+    this.totalCount = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final rate = totalCount == 0 ? 0 : ((completedCount / totalCount) * 100).round();
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -17,9 +26,9 @@ class HomePage extends StatelessWidget {
           const SizedBox(height: 24),
           _buildStatCard('Current Streak', '7 days', Icons.local_fire_department, Colors.orange),
           const SizedBox(height: 12),
-          _buildStatCard('Tasks Completed Today', '5 / 8', Icons.check_circle, Colors.green),
+          _buildStatCard('Tasks Completed Today', '$completedCount / $totalCount', Icons.check_circle, Colors.green),
           const SizedBox(height: 12),
-          _buildStatCard('Completion Rate', '87%', Icons.trending_up, Colors.blue),
+          _buildStatCard('Completion Rate', '$rate%', Icons.trending_up, Colors.blue),
         ],
       ),
     );
