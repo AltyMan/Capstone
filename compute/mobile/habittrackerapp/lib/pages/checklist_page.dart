@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../http_logs_repository.dart';
+import '../log.dart';
 
 class ChecklistPage extends StatefulWidget {
   const ChecklistPage({super.key});
@@ -8,7 +10,8 @@ class ChecklistPage extends StatefulWidget {
 }
 
 class _ChecklistPageState extends State<ChecklistPage> {
-  // Static demo data - will be replaced with API data later
+    final logRepo = HttpLogRepository(1);
+    Future<List<Log>> logs = logRepo.read(); 
   final List<Map<String, dynamic>> _tasks = [
     {'name': 'Morning Meditation', 'completed': true, 'time': '6:00 AM'},
     {'name': 'Exercise', 'completed': true, 'time': '7:00 AM'},

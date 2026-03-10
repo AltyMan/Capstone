@@ -13,7 +13,7 @@ class User {
 
   Map<String, String> toQuery() {
     return {
-        'user_id': user_id,
+        'user_id': user_id.toString(),
   };
   }
 }

@@ -8,7 +8,7 @@ import './user.dart';
 
 // Still need to test Update/Delete (Have no actual delete routes)
 
-Future<void> main() async {
+Future<void> main2() async {
   final habitRepo = HttpHabitRepository(1);
   final ruleRepo = HttpRuleRepository(1);
   final logRepo = HttpLogRepository(1);

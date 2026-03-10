@@ -23,8 +23,10 @@ class HttpLogRepository extends HttpRepository<Log> {
         }
 
         final Map<String, dynamic> data = jsonDecode(res.body);
-        print(data);
-        return <Log>[];
+        List<dynamic> ilogs = data['result'];
+        print(ilogs);
+        List<Log> logs = ilogs.map((e) => Log.fromJson(e)).toList();
+        return logs;
     }
 
     @override
