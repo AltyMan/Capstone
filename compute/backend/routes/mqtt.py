@@ -55,6 +55,6 @@ def set_device(device_id: str):
     user = User(1)
     user.log_habit(state=state, self_reported=True, habit_name=device_id)
     
-    speak(f"{device_id} is {state} vro")
+    # speak(f"{device_id} is {state} vro")
 
     return jsonify(res.json()), res.status_code

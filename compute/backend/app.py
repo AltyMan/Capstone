@@ -79,5 +79,5 @@ if __name__ == "__main__":
    # sch.start()
    # sch.schedule_habit(1, "Bonger")
    # sch.print_active_jobs(1)
-    speak("Turning on Amit Altman Certified Smart Home Capstone")
+    speak("Good Morning Ryan")
     app.run(host="192.168.2.158", port=5000)
