@@ -1,4 +1,4 @@
--- INSERT INTO habits (user_id, mqtt_topic, habit_name, is_device, assoc_dev_id) VALUES (1, "idk/idk", "plug3", True, "hs105");
+INSERT INTO habits (user_id, mqtt_topic, habit_name, is_device, assoc_dev_id) VALUES (1, "idk/idk", "plug2", True, "hs105");
 
 DELETE FROM habit_logs WHERE habit_name = 'plug1';
 DELETE FROM habit_logs WHERE habit_name = 'plug2';

@@ -4,6 +4,8 @@ import pandas as pd
 from typing import NamedTuple
 
 DB_PATH: Path = Path("C:/Users/Owner/Documents/Dev/Capstone/compute/db/habits.db")
+DB_PATH: Path = Path("/home/ryan/Downloads/Capstone/compute/db/habits.db")
+
 
 def get_connection() -> sqlite3.Connection:
     DB_PATH.parent.mkdir(exist_ok=True)

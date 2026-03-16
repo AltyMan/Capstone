@@ -1,0 +1,2 @@
+{"accepted":true,"device_id":"plug2","payload":{"source":"1","state":"ON","ts":1773683867,"user_id":"1"},"topic":"/home/plug2/set"}
+{"accepted":true,"device_id":"plug2","payload":{"source":"1","state":"OFF","ts":1773683872,"user_id":"1"},"topic":"/home/plug2/set"}
