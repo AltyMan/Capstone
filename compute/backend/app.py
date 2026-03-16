@@ -79,5 +79,6 @@ if __name__ == "__main__":
    # sch.start()
    # sch.schedule_habit(1, "Bonger")
    # sch.print_active_jobs(1)
-    speak("Good Morning Ryan")
-    app.run(host="192.168.2.158", port=5000)
+    # speak("Good Morning Ryan")
+    app.run(host="172.20.10.13", port=5000)
+     

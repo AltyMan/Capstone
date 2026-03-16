@@ -19,7 +19,7 @@ def speak(text):
         '(New-Object Media.SoundPlayer "out.wav").PlaySync();'
     ])
 
-GATEWAY_URL = "https://raspberrypi.tailbe7155.ts.net/"
+GATEWAY_URL = "https://raspberrypi.tailbe7155.ts.net"
 
 @mqtt_bp.get("/health")
 def health():
@@ -53,7 +53,11 @@ def set_device(device_id: str):
     )
 
     user = User(1)
-    user.log_habit(state=state, self_reported=True, habit_name=device_id)
+
+    user_habits = user.get_habits()
+    user_habit_names = [h.habit_name for h in user_habits]
+    if device_id in user_habit_names:
+        user.log_habit(state=state, self_reported=True, habit_name=device_id)
     
     # speak(f"{device_id} is {state} vro")
 
