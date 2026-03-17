@@ -3,7 +3,6 @@ import '../habit.dart';
 import '../http_habit_repository.dart';
 
 class HabitPage extends StatefulWidget {
-  
   const HabitPage({super.key});
 
   @override
@@ -26,10 +25,10 @@ class _HabitPageState extends State<HabitPage> {
   Future<void> loadHabits() async {
     try {
       final data = await repo.read();
-      
+
       setState(() {
         habits = data;
-       // print(habits);
+        // print(habits);
       });
     } catch (e) {
       print(e);
@@ -60,32 +59,74 @@ class _HabitPageState extends State<HabitPage> {
   }
 
   void showAddHabitDialog() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Add Habit"),
-        content: TextField(
-          controller: _nameController,
-          decoration: const InputDecoration(
-            hintText: "Habit name",
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await addHabit();
-              Navigator.pop(context);
-            },
-            child: const Text("Add"),
-          ),
-        ],
-      ),
-    );
-  }
+  final TextEditingController controller = TextEditingController();
+  bool isDevice = false;
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setStateDialog) {
+          return AlertDialog(
+            title: const Text("Add Habit"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    hintText: "Habit name",
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Device Habit"),
+                    Switch(
+                      value: isDevice,
+                      onChanged: (value) {
+                        setStateDialog(() {
+                          isDevice = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel"),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  final name = controller.text.trim();
+                  if (name.isEmpty) return;
+
+                  final habit = Habit(
+                    id: 0,
+                    name: name,
+                    isDevice: isDevice,
+                  );
+
+                  final success = await repo.create(habit);
+
+                  if (success) {
+                    Navigator.pop(context);
+                    loadHabits();
+                  }
+                },
+                child: const Text("Add"),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -102,10 +143,16 @@ class _HabitPageState extends State<HabitPage> {
 
             return ListTile(
               title: Text(habit.name),
+              subtitle: Text(
+                habit.isDevice ? "Device habit" : "Manual habit",
+              ),
+              leading: Icon(
+                habit.isDevice ? Icons.memory : Icons.person,
+              ),
               trailing: IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () => deleteHabit(habit.id),
-              )
+              ),
             );
           },
         ),
