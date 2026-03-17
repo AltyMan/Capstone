@@ -36,8 +36,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
             _tasks = snapshot.data!;
           }
 
-          final completedCount =
-              _tasks.where((log) => log.state == 'completed').length;
+          final completedCount = _tasks.where((log) => _isSuccess(log.state)).length;
           final totalCount = _tasks.length;
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -70,7 +69,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
                   itemCount: _tasks.length,
                   itemBuilder: (context, index) {
                     final log = _tasks[index];
-                    final isCompleted = log.state == 'completed';
+                    final isCompleted = _isSuccess(log.state);
 
                     return Card(
                       margin: const EdgeInsets.symmetric(
@@ -86,6 +85,29 @@ class _ChecklistPageState extends State<ChecklistPage> {
                           ),
                         ),
                         subtitle: Text(log.timestamp),
+
+                        /// 🔥 STATE DISPLAY (RIGHT SIDE)
+                        secondary: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _displayState(log.state),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: _getStateColor(log.state),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              isCompleted
+                                  ? Icons.check_circle
+                                  : Icons.radio_button_unchecked,
+                              color:
+                                  isCompleted ? Colors.green : Colors.grey,
+                            ),
+                          ],
+                        ),
+
                         value: isCompleted,
                         onChanged: (bool? value) async {
                           final newState =
@@ -107,20 +129,13 @@ class _ChecklistPageState extends State<ChecklistPage> {
                             });
 
                             final completed = _tasks
-                                .where((l) => l.state == 'completed')
+                                .where((l) => _isSuccess(l.state))
                                 .length;
 
                             widget.onCountChanged
                                 ?.call(completed, _tasks.length);
                           }
                         },
-                        secondary: Icon(
-                          isCompleted
-                              ? Icons.check_circle
-                              : Icons.radio_button_unchecked,
-                          color:
-                              isCompleted ? Colors.green : Colors.grey,
-                        ),
                       ),
                     );
                   },
@@ -131,6 +146,39 @@ class _ChecklistPageState extends State<ChecklistPage> {
         },
       ),
     );
+  }
+
+  bool _isSuccess(String state) {
+    final s = state.toLowerCase();
+    return s == 'completed' || s == 'on';
+  }
+
+  String _displayState(String state) {
+    switch (state.toLowerCase()) {
+      case 'completed':
+        return 'Completed';
+      case 'missed':
+        return 'Missed';
+      case 'on':
+        return 'On';
+      case 'off':
+        return 'Off';
+      default:
+        return state;
+    }
+  }
+
+  Color _getStateColor(String state) {
+    switch (state.toLowerCase()) {
+      case 'completed':
+      case 'on':
+        return Colors.green;
+      case 'missed':
+      case 'off':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 
   void _showAddLogDialog() {

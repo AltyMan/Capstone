@@ -1,180 +1,205 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../http_habit_repository.dart';
+import '../http_logs_repository.dart';
+import '../habit.dart';
+import '../log.dart';
 
-class SimpleLineChart extends StatelessWidget {
-  const SimpleLineChart({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 240,
-      child: LineChart(
-        LineChartData(
-          minX: 0,
-          maxX: 6,
-          minY: 0,
-          maxY: 6,
-          gridData: const FlGridData(show: true),
-          titlesData: const FlTitlesData(show: true),
-          borderData: FlBorderData(show: true),
-          lineBarsData: [
-            LineChartBarData(
-              spots: const [
-                FlSpot(0, 1),
-                FlSpot(1, 3),
-                FlSpot(2, 2),
-                FlSpot(3, 5),
-                FlSpot(4, 3.5),
-                FlSpot(5, 4),
-                FlSpot(6, 5.5),
-              ],
-              isCurved: true,
-              barWidth: 3,
-              dotData: const FlDotData(show: true),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+bool isSuccess(String state) {
+  final s = state.toLowerCase();
+  return s == "completed" || s == "on";
 }
 
-class GraphPage extends StatelessWidget {
+class GraphPage extends StatefulWidget {
   const GraphPage({super.key});
 
   @override
+  State<GraphPage> createState() => _GraphPageState();
+}
+
+class _GraphPageState extends State<GraphPage> {
+  final habitRepo = HttpHabitRepository(1);
+  final logRepo = HttpLogRepository(1);
+
+  List<Habit> habits = [];
+  List<Log> logs = [];
+
+  String? selectedHabit;
+
+  /// store sorted days so we can label X axis
+  List<DateTime> sortedDays = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    try {
+      final h = await habitRepo.read();
+      final l = await logRepo.read();
+
+      setState(() {
+        habits = h;
+        logs = l;
+
+        if (habits.isNotEmpty) {
+          selectedHabit = habits.first.name;
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  List<FlSpot> buildSpots() {
+    if (selectedHabit == null) return [];
+
+    final filtered = logs.where((l) =>
+        l.habit_name == selectedHabit &&
+        isSuccess(l.state));
+
+    Map<DateTime, int> counts = {};
+
+    for (var log in filtered) {
+      try {
+        final dt = DateTime.parse(
+          log.timestamp.replaceFirst(' ', 'T'),
+        );
+
+        final day = DateTime(dt.year, dt.month, dt.day);
+
+        counts[day] = (counts[day] ?? 0) + 1;
+      } catch (e) {
+        continue;
+      }
+    }
+
+    sortedDays = counts.keys.toList()..sort();
+
+    List<FlSpot> spots = [];
+
+    for (int i = 0; i < sortedDays.length; i++) {
+      final day = sortedDays[i];
+      spots.add(
+        FlSpot(i.toDouble(), counts[day]!.toDouble()),
+      );
+    }
+
+    return spots;
+  }
+
+  String formatDate(DateTime dt) {
+    return "${dt.month}/${dt.day}";
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Weekly Completion Trend',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 16),
-          const SimpleLineChart(),
-          const SizedBox(height: 32),
-          const Text(
-            'Task Completion Heatmap',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 16),
-          _buildHeatmap(),
-          const SizedBox(height: 32),
-          const Text(
-            'Overall Statistics',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 16),
-          _buildStatsGrid(),
-        ],
+    final spots = buildSpots();
+
+    final double maxY = spots.isEmpty
+    ? 1.0
+    : spots.fold(0.0, (max, e) => e.y > max ? e.y : max) + 1.0;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Habit Analytics"),
       ),
-    );
-  }
-
-  Widget _buildHeatmap() {
-    // Static demo data - shows last 7 days for each habit
-    final habits = ['Meditation', 'Exercise', 'Reading', 'Journal', 'Guitar'];
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    
-    // Mock completion data: 1 = completed, 0 = not completed
-    final completionData = [
-      [1, 1, 0, 1, 1, 1, 0], // Meditation
-      [1, 1, 1, 0, 1, 1, 1], // Exercise
-      [1, 0, 1, 1, 1, 0, 1], // Reading
-      [0, 1, 1, 1, 0, 1, 1], // Journal
-      [1, 1, 0, 0, 1, 1, 0], // Guitar
-    ];
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              const SizedBox(width: 80),
-              ...days.map((day) => Expanded(
-                child: Center(
-                  child: Text(day, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                ),
-              )),
-            ],
-          ),
-          const SizedBox(height: 8),
-          ...List.generate(habits.length, (habitIndex) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 80,
-                    child: Text(
-                      habits[habitIndex],
-                      style: const TextStyle(fontSize: 12),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  ...List.generate(7, (dayIndex) {
-                    final completed = completionData[habitIndex][dayIndex] == 1;
-                    return Expanded(
-                      child: Center(
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: completed ? Colors.green.shade300 : Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Icon(
-                            completed ? Icons.check : Icons.close,
-                            size: 16,
-                            color: completed ? Colors.white : Colors.grey,
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-                ],
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatsGrid() {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildStatCard('Best Streak', '12 days', Colors.orange),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildStatCard('Avg Completion', '87%', Colors.blue),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatCard(String label, String value, Color color) {
-    return Card(
-      child: Padding(
+      body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Text(
-              value,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
+            DropdownButton<String>(
+              value: selectedHabit,
+              hint: const Text("Select habit"),
+              isExpanded: true,
+              items: habits.map((h) {
+                return DropdownMenuItem(
+                  value: h.name,
+                  child: Text(h.name),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedHabit = value;
+                });
+              },
             ),
-            const SizedBox(height: 4),
-            Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+
+            const SizedBox(height: 24),
+
+            SizedBox(
+              height: 250,
+              child: spots.isEmpty
+                  ? const Center(child: Text("No data"))
+                  : LineChart(
+                      LineChartData(
+                        minX: 0,
+                        maxX: spots.length > 1
+                            ? spots.length.toDouble() - 1
+                            : 1,
+
+                        /// ✅ proper Y scaling
+                        minY: 0,
+                        maxY: maxY,
+
+                        gridData: const FlGridData(show: true),
+                        borderData: FlBorderData(show: true),
+
+                        /// ✅ real axes
+                        titlesData: FlTitlesData(
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              reservedSize: 32,
+                              getTitlesWidget: (value, meta) {
+                                return Text(
+                                  value.toInt().toString(),
+                                  style: const TextStyle(fontSize: 10),
+                                );
+                              },
+                            ),
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) {
+                                final index = value.toInt();
+
+                                if (index < 0 ||
+                                    index >= sortedDays.length) {
+                                  return const SizedBox();
+                                }
+
+                                return Text(
+                                  formatDate(sortedDays[index]),
+                                  style: const TextStyle(fontSize: 10),
+                                );
+                              },
+                            ),
+                          ),
+                          topTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: spots,
+                            isCurved: true,
+                            barWidth: 3,
+                            dotData: const FlDotData(show: true),
+                          ),
+                        ],
+                      ),
+                    ),
+            ),
           ],
         ),
       ),
