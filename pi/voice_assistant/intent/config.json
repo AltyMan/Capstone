@@ -18,7 +18,11 @@
     },
     "plug2": {
       "primary": "plug2",
-      "aliases": ["plug two", "plug 2", "second plug"]
+      "aliases": ["plug two", "plug 2", "second plug", "plug to", "blog to", "second blog"]
+    },
+    "plug3": {
+      "primary": "plug3",
+      "aliases": ["plug three", "plug 3", "third plug", "what 3", "blog three", "third blog"]
     }
   },
   "actions": [

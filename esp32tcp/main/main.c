@@ -20,7 +20,7 @@
 
 static const char *TAG = "WAKENET_CLIENT";
 
-// --- PLAYBACK MODES ---
+// Playback Modes
 typedef enum {
     PLAY_MODE_FLASH,
     PLAY_MODE_SOCKET
@@ -151,7 +151,7 @@ void app_main(void)
     int audio_chunksize_bytes = wakenet->get_samp_chunksize(model_data) * sizeof(int16_t);
     int16_t *buffer = (int16_t *) malloc(audio_chunksize_bytes);
 
-    // --- PLAYBACK PIPELINE (PORT 0) ---
+    // Playback Pipeline (PORT 0)
     audio_pipeline_cfg_t play_pipeline_cfg = DEFAULT_AUDIO_PIPELINE_CONFIG();
     audio_pipeline_handle_t play_pipeline = audio_pipeline_init(&play_pipeline_cfg);
 
@@ -167,7 +167,7 @@ void app_main(void)
     const char *play_link_tag[2] = {"mp3", "i2s_out"};
     audio_pipeline_link(play_pipeline, &play_link_tag[0], 2); 
 
-    // --- RECORDING PIPELINE (PORT 1) ---
+    // Recording Pipeline (PORT 1)
     audio_pipeline_cfg_t rec_pipeline_cfg = DEFAULT_AUDIO_PIPELINE_CONFIG();
     audio_pipeline_handle_t rec_pipeline = audio_pipeline_init(&rec_pipeline_cfg);
 
@@ -202,15 +202,15 @@ void app_main(void)
             audio_pipeline_stop(rec_pipeline);
             audio_pipeline_wait_for_stop(rec_pipeline);
 
-            // Play the Local MP3 Ding
-            ESP_LOGI(TAG, "Triggering Local Ding...");
-            current_play_mode = PLAY_MODE_FLASH;
-            play_mp3_audio(play_pipeline, mp3_decoder, i2s_stream_writer);
-
             // Restart Mic
             audio_pipeline_reset_ringbuffer(rec_pipeline);
             audio_pipeline_reset_elements(rec_pipeline);
             audio_pipeline_run(rec_pipeline);
+
+            // Play the Local MP3 Ding
+            ESP_LOGI(TAG, "Triggering Local Ding...");
+            current_play_mode = PLAY_MODE_FLASH;
+            play_mp3_audio(play_pipeline, mp3_decoder, i2s_stream_writer);            
             
             ESP_LOGI(TAG, "Opening TCP socket...");
             int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -219,15 +219,15 @@ void app_main(void)
             server_addr.sin_port = htons(CONFIG_TCP_PORT);
             inet_pton(AF_INET, CONFIG_TCP_URL, &server_addr.sin_addr.s_addr);
             
-            // Set a 10-second timeout so the ESP doesn't freeze if the Python server crashes
+            // Set 10-second timeout so  ESP doesn't freeze if Python server crashes
             struct timeval tv;
             tv.tv_sec = 10;
             tv.tv_usec = 0;
             setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
             
             if (connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) == 0) {
-                ESP_LOGI(TAG, "Streaming 3 seconds of audio...");
-                int bytes_to_send = 96000; // 3 seconds * 16000 samples/second * 2 bytes/sample
+                ESP_LOGI(TAG, "Streaming 5 seconds of audio...");
+                int bytes_to_send = 160000; // 5 seconds * 16000 samples/second * 2 bytes/sample
                 int bytes_sent = 0;
                 
                 while (bytes_sent < bytes_to_send) {
@@ -240,14 +240,14 @@ void app_main(void)
                     }
                 }
                 
-                // === NEW: RECEIVE TTS RESPONSE ===
+                // Receive TTS Response
                 ESP_LOGI(TAG, "Command sent. Waiting for TTS response...");
                 
-                // Stop Mic so the speaker can take over
+                // Stop Mic
                 audio_pipeline_stop(rec_pipeline);
                 audio_pipeline_wait_for_stop(rec_pipeline);
                 
-                // Switch mode and play!
+                // Switch Mode
                 current_play_mode = PLAY_MODE_SOCKET;
                 active_tts_sock = sock;
                 play_mp3_audio(play_pipeline, mp3_decoder, i2s_stream_writer);

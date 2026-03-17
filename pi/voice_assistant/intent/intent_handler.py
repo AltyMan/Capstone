@@ -144,6 +144,7 @@ def _infer_target_plug_from_speech(speech: Optional[str]) -> Optional[str]:
     text = speech.lower()
     if re.search(r"\b(plug\s*1|plug\s*one|first\s*plug|plug1)\b", text): return "plug1"
     if re.search(r"\b(plug\s*2|plug\s*two|second\s*plug|plug2)\b", text): return "plug2"
+    if re.search(r"\b(plug\s*3|plug\s*three|third\s*plug|plug3)\b", text): return "plug3"
     return None
 
 def publish_intent_to_mqtt(client: mqtt.Client, intent: Intent) -> None:
@@ -173,10 +174,17 @@ def generate_response_text(intent: Intent, target_device: Optional[str]) -> str:
         return base + "i-m-sorry-i-didn-t-understand-that-command.mp3"
     
     if not target_device:
-        return base + "i-understood-the-action-but-i-m-not-sure-which-plug-you-meant.mp3"
+        return base + "sorry-this-device-is-not-recognized.mp3"
     
     # Determine the target plug file
-    device_file = "plug-one.mp3" if target_device == "plug1" else "plug-two.mp3"
+    device_file = None
+    if target_device == "plug1":
+        device_file = "plug-one.mp3"
+    elif target_device == "plug2":
+        device_file = "plug-two.mp3"
+    else:
+        device_file = "plug-three.mp3"
+    #device_file = "plug-one.mp3" if target_device == "plug1" else "plug-two.mp3"
     
     # Combine the action file with the target plug file
     if intent.action == IntentAction.SET:
