@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 abstract class HttpRepository<T> {
   final int userId;
   final http.Client client;
-
-  static const String baseUrl = 'http://192.168.2.158:5000';
+    // 172.20.10.13
+  static const String baseUrl = 'http://192.168.2.211:5000';
 
   HttpRepository(this.userId, {http.Client? client})
       : client = client ?? http.Client();

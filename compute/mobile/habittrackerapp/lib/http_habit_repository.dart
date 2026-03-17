@@ -24,8 +24,9 @@ class HttpHabitRepository extends HttpRepository<Habit> {
     }
 
     final Map<String, dynamic> data = jsonDecode(res.body);
-    print(data);
-    return <Habit>[];
+    List<dynamic> ihabits = data['result']['habits'];
+    List<Habit> habits = ihabits.map((e) => Habit.fromJson(e)).toList();
+    return habits;
     // return data.map((e) => Habit.fromJson(e)).toList();
   }
 

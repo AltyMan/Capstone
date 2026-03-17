@@ -47,7 +47,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Daily Routine',
+                    'Daily Logs',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(

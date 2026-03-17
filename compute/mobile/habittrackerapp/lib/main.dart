@@ -3,6 +3,7 @@ import 'pages/home_page.dart';
 import 'pages/checklist_page.dart';
 import 'pages/graph_page.dart';
 import 'pages/mqtt_page.dart';
+import 'pages/habit_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,13 +38,15 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> _pages = [
     const HomePage(),
     const ChecklistPage(),
+    const HabitPage(),
     const GraphPage(),
     const MqttPage(),
   ];
 
   final List<String> _titles = [
     'Home',
-    'Daily Checklist',
+    'Logs',
+    'Habits',
     'Progress Graphs',
     'Automation & MQTT',
   ];
@@ -72,7 +75,12 @@ class _MainNavigationState extends State<MainNavigation> {
           NavigationDestination(
             icon: Icon(Icons.checklist_outlined),
             selectedIcon: Icon(Icons.checklist),
-            label: 'Checklist',
+            label: 'Logs',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.checklist_outlined),
+            selectedIcon: Icon(Icons.checklist),
+            label: 'Habits',
           ),
           NavigationDestination(
             icon: Icon(Icons.bar_chart_outlined),

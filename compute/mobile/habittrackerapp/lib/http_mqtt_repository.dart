@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 
 class HttpMqttRepository {
   final String baseUrl;
-
-  HttpMqttRepository({this.baseUrl = 'http://192.168.2.158:5000'});
+    // 172.20.10.13
+  HttpMqttRepository({this.baseUrl = 'http://192.168.2.211:5000'});
 
   Uri _uri(String path) => Uri.parse('$baseUrl$path');
 
