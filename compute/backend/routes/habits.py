@@ -52,7 +52,7 @@ habits_bp = Blueprint("habits", __name__)
 def post_add_habit(user_id: int):
     user = User(user_id)
     habit_name: str = request.args.get('name')
-    is_device: bool = request.args.get('device', type=bool)
+    is_device: bool = request.args.get('device', 'false').lower() == 'true'
     assoc_dev_id: str = request.args.get('adi') # assoc_dev_id
     mqtt_topic: str = request.args.get('mqtt')
     hfi: str = request.args.get('hfi') # habit_full_id

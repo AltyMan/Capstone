@@ -80,5 +80,6 @@ if __name__ == "__main__":
    # sch.schedule_habit(1, "Bonger")
    # sch.print_active_jobs(1)
     # speak("Good Morning Ryan")
-    app.run(host="172.20.10.13", port=5000)
+    # SEBI IP: 172.20.10.13
+    app.run(host="192.168.2.211", port=5000)
      

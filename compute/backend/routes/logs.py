@@ -55,8 +55,14 @@ def post_add_log(user_id: int):
     state: str = request.args.get('state')
     self_reported: bool = request.args.get('reported', type=bool)
     
-    user.log_habit(habit_name, state, self_reported)
+    habits = user.get_habits()
+    names = [h.habit_name for h in habits]
+    print(names)
+
+    if habit_name not in names:
+        return {}, 400
     
+    user.log_habit(habit_name, state, self_reported)
     return {
         "result" : f"Successfully logged habit {habit_name} ({state}:{self_reported})"
     }, 200
