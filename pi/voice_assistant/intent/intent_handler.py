@@ -12,94 +12,80 @@ import socket
 import time
 import paho.mqtt.client as mqtt
 
-
 MQTT_BROKER_HOST = "127.0.0.1"
 MQTT_BROKER_PORT = 1883
 TARGET_PLUGS = ("plug1", "plug2")
 
-
-class IntentAction(Enum): # enum for supported actions
-    SET = "set"  # set on/off
-    TOGGLE = "toggle"  # toggle state (modifies to opposite state)
-    GET = "get"  # get state
-    UNKNOWN = "unknown" # unrecognized
-
+class IntentAction(Enum): 
+    SET = "set"  
+    TOGGLE = "toggle"  
+    GET = "get"  
+    UNKNOWN = "unknown" 
 
 @dataclass
-class Intent: # intent structure (to be returned in structure listed at top of file)
+class Intent: 
     action: IntentAction
-    device: Optional[str] = None  # Name/ID
-    command: Optional[str] = None  # on, off, toggle
-    raw_speech: Optional[str] = None  # original text
-    confidence: float = 1.0  # confidence score (0-1) -> measure accuracy
+    device: Optional[str] = None  
+    command: Optional[str] = None  
+    raw_speech: Optional[str] = None  
+    confidence: float = 1.0  
 
     def __repr__(self):
         return f"Intent(action={self.action.value}, device={self.device}, command={self.command}, confidence={self.confidence:.2f})"
 
-
-class IntentParser: # intent parser class
+class IntentParser: 
     def __init__(self, config_path: Optional[str] = None, device_aliases: Optional[Dict[str, List[str]]] = None):
         self.device_aliases = {}
         self.action_patterns = []
         
-        if config_path is None: # load config path
+        if config_path is None: 
             config_path = Path(__file__).parent / "config.json"
         else:
             config_path = Path(config_path)
         
-        self._load_config(config_path) # load from config
+        self._load_config(config_path) 
         
         if device_aliases:
-            self.device_aliases.update(device_aliases) # merge custom aliases
+            self.device_aliases.update(device_aliases) 
 
-    def _load_config(self, config_path: Path) -> None: # config loader
-        # takes from JSON file "config.json" in same directory
+    def _load_config(self, config_path: Path) -> None: 
         try:
             if not config_path.exists():
-                print(f"Warning: Config file not found at {config_path}. Using minimal defaults.")
-                self._set_defaults() # set as defaults if no config file is there
+                self._set_defaults() 
                 return
             
             with open(config_path, 'r') as f:
                 config = json.load(f)
             
-            devices_config = config.get("devices", {}) # load devices (aliases)
+            devices_config = config.get("devices", {}) 
             for device_key, device_info in devices_config.items():
-                primary = device_info.get("primary", device_key) # get device ID/key
-                aliases = device_info.get("aliases", []) # get aliases recognized
+                primary = device_info.get("primary", device_key) 
+                aliases = device_info.get("aliases", []) 
                 
-                # add primary and aliases to mapping
                 self.device_aliases[device_key.lower()] = primary
                 for alias in aliases:
                     self.device_aliases[alias.lower()] = primary
             
-            # load action patterns
             actions_config = config.get("actions", [])
-            for action_config in actions_config: # for each, has a pattern, action type, and command executed
+            for action_config in actions_config: 
                 pattern = action_config.get("pattern")
                 action = action_config.get("action")
                 command = action_config.get("command")
                 
-                if pattern and action: # if both exist
+                if pattern and action: 
                     try:
-                        intent_action = IntentAction(action) # convert action string to enum
-                        self.action_patterns.append((pattern, intent_action, command)) # append to list
+                        intent_action = IntentAction(action) 
+                        self.action_patterns.append((pattern, intent_action, command)) 
                     except ValueError:
-                        print(f"Warning: Unknown action '{action}' in config. Skipping pattern.")
                         continue
             
             if not self.action_patterns:
-                print("Warning: No valid action patterns loaded from config. Using defaults.")
                 self._set_defaults()
                 
-        except json.JSONDecodeError as e:
-            print(f"Error parsing config JSON: {e}. Using defaults.")
-            self._set_defaults()
-        except Exception as e:
-            print(f"Error loading config: {e}. Using defaults.")
+        except Exception:
             self._set_defaults()
 
-    def _set_defaults(self) -> None: # minimal listed defaults in case of no config file
+    def _set_defaults(self) -> None: 
         default_aliases = {
             "bedroom light": "bedroom_light", "bedroom": "bedroom_light",
             "bedroom lights": "bedroom_light", "bedroom lamp": "bedroom_light",
@@ -116,85 +102,51 @@ class IntentParser: # intent parser class
             (r"is\s+(?:the\s+)?(.+)\s+(?:on|off)\??", IntentAction.GET, None),
         ]
 
-    def parse(self, speech: str) -> Intent: # parser, takes speech and returns expected intent structure
+    def parse(self, speech: str) -> Intent: 
         if not speech or not isinstance(speech, str):
             return Intent(action=IntentAction.UNKNOWN, raw_speech=speech)
 
         speech = speech.strip()
         
         for pattern, action, default_command in self.action_patterns:
-            match = re.search(pattern, speech, re.IGNORECASE) # match against pattern
-            if match: # if matched, extract device name and resolve to ID
+            match = re.search(pattern, speech, re.IGNORECASE) 
+            if match: 
                 device_name = match.group(1).strip() if match.groups() else None
                 device_id = self._resolve_device(device_name)
-                
                 return Intent(
-                    action=action,
-                    device=device_id,
-                    command=default_command,
-                    raw_speech=speech,
-                    confidence=0.9 if device_id else 0.6  # manual confidence score for now
+                    action=action, device=device_id, command=default_command,
+                    raw_speech=speech, confidence=0.9 if device_id else 0.6  
                 )
-        # in the case of no pattern
-        return Intent(
-            action=IntentAction.UNKNOWN,
-            raw_speech=speech,
-            confidence=0.0
-        )
+        return Intent(action=IntentAction.UNKNOWN, raw_speech=speech, confidence=0.0)
 
-    def _resolve_device(self, device_name: Optional[str]) -> Optional[str]: # device resolver, returns ID
-        if not device_name:
-            return None
-
+    def _resolve_device(self, device_name: Optional[str]) -> Optional[str]: 
+        if not device_name: return None
         device_name_lower = device_name.lower().strip()
-
-        # check exact match
         if device_name_lower in self.device_aliases:
             return self.device_aliases[device_name_lower]
-
-        # check partial match
         for alias, device_id in self.device_aliases.items():
             if device_name_lower in alias or alias in device_name_lower:
                 return device_id
         return None
 
-    def add_device_alias(self, spoken_name: str, device_id: str, alternatives: Optional[List[str]] = None): # add alias
-        self.device_aliases[spoken_name.lower()] = device_id
-
-
-# global parser instance
 _parser: Optional[IntentParser] = None
 
-
-def get_parser() -> IntentParser: # get/create global parser instance
+def get_parser() -> IntentParser: 
     global _parser
-    if _parser is None:
-        _parser = IntentParser()
+    if _parser is None: _parser = IntentParser()
     return _parser
-
-
-def parse_intent(speech: str) -> Intent: # parse intent, return intent object from speech input
-    return get_parser().parse(speech)
-
 
 def std_set_topic(device_id: str) -> str:
     return f"/home/{device_id}/set"
 
-
 def _infer_target_plug_from_speech(speech: Optional[str]) -> Optional[str]:
-    if not speech:
-        return None
-
+    if not speech: return None
     text = speech.lower()
-    if re.search(r"\b(plug\s*1|plug\s*one|first\s*plug|plug1)\b", text):
-        return "plug1"
-    if re.search(r"\b(plug\s*2|plug\s*two|second\s*plug|plug2)\b", text):
-        return "plug2"
+    if re.search(r"\b(plug\s*1|plug\s*one|first\s*plug|plug1)\b", text): return "plug1"
+    if re.search(r"\b(plug\s*2|plug\s*two|second\s*plug|plug2)\b", text): return "plug2"
     return None
 
-
 def publish_intent_to_mqtt(client: mqtt.Client, intent: Intent) -> None:
-    # Route only to one plug. Do not broadcast set/toggle commands to both plugs.
     if intent.action == IntentAction.SET and intent.command in ("on", "off"):
         command = intent.command
     elif intent.action == IntentAction.TOGGLE:
@@ -202,28 +154,54 @@ def publish_intent_to_mqtt(client: mqtt.Client, intent: Intent) -> None:
     else:
         return
 
-    if intent.device in TARGET_PLUGS:
-        target_device = intent.device
-    else:
-        target_device = _infer_target_plug_from_speech(intent.raw_speech)
+    target_device = intent.device if intent.device in TARGET_PLUGS else _infer_target_plug_from_speech(intent.raw_speech)
 
     if target_device is None:
-        print("[MQTT] Skipped publish: no target plug resolved from intent")
+        print("[MQTT] Skipped publish: no target plug resolved")
         return
 
     topic = std_set_topic(target_device)
     client.publish(topic, command, qos=0, retain=False)
     print(f"[MQTT] {topic} <- {command}")
 
+def generate_response_text(intent: Intent, target_device: Optional[str]) -> str:
+    # This 0.4s file wakes up the physical amplifier on the ESP32!
+    base = "silence.mp3,"
+    
+    # Error states map to a single file
+    if intent.action == IntentAction.UNKNOWN:
+        return base + "i-m-sorry-i-didn-t-understand-that-command.mp3"
+    
+    if not target_device:
+        return base + "i-understood-the-action-but-i-m-not-sure-which-plug-you-meant.mp3"
+    
+    # Determine the target plug file
+    device_file = "plug-one.mp3" if target_device == "plug1" else "plug-two.mp3"
+    
+    # Combine the action file with the target plug file
+    if intent.action == IntentAction.SET:
+        if intent.command == "on":
+            return base + f"turning-on.mp3,{device_file}"
+        else:
+            return base + f"turning-off.mp3,{device_file}"
+    elif intent.action == IntentAction.TOGGLE:
+        return base + f"toggling.mp3,{device_file}"
+    elif intent.action == IntentAction.GET:
+        return base + f"checking.mp3,{device_file}"
+    
+    return base + "i-m-sorry-i-didn-t-understand-that-command.mp3"
 
 def run_intent_server(host: str = "127.0.0.1", port: int = 9090) -> None:
     parser = get_parser()
     print(f"Intent server listening on {host}:{port}...")
 
     mqtt_client = mqtt.Client(client_id=f"intent-handler-{int(time.time())}")
-    mqtt_client.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, keepalive=60)
-    mqtt_client.loop_start()
-    print(f"MQTT connected to {MQTT_BROKER_HOST}:{MQTT_BROKER_PORT}")
+    try:
+        mqtt_client.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, keepalive=60)
+        mqtt_client.loop_start()
+        print(f"MQTT connected to {MQTT_BROKER_HOST}:{MQTT_BROKER_PORT}")
+    except ConnectionRefusedError:
+        print(f"[WARNING] MQTT Broker offline at {MQTT_BROKER_HOST}:{MQTT_BROKER_PORT}. Running without MQTT.")
 
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
@@ -234,35 +212,37 @@ def run_intent_server(host: str = "127.0.0.1", port: int = 9090) -> None:
             while True:
                 conn, addr = server.accept()
                 with conn:
-                    print(f"Intent client connected: {addr}")
                     buf = b""
                     while True:
                         data = conn.recv(4096)
-                        if not data:
-                            break
-
+                        if not data: break
                         buf += data
+                        
                         while b"\n" in buf:
                             line, buf = buf.split(b"\n", 1)
-                            if not line.strip():
-                                continue
+                            if not line.strip(): continue
 
                             try:
                                 payload = json.loads(line.decode("utf-8"))
                                 speech = str(payload.get("text", "")).strip()
                                 if not speech:
+                                    conn.sendall(b"No speech detected.\n")
                                     continue
 
                                 intent = parser.parse(speech)
-                                print(f"Speech: \"{speech}\"")
-                                print(f"{intent}")
+                                target_device = intent.device if intent.device in TARGET_PLUGS else _infer_target_plug_from_speech(intent.raw_speech)
+                                
                                 publish_intent_to_mqtt(mqtt_client, intent)
+                                
+                                # Send the friendly string back to command_listener.py!
+                                reply = generate_response_text(intent, target_device)
+                                conn.sendall((reply + "\n").encode("utf-8"))
+                                
                             except json.JSONDecodeError:
-                                print("Warning: Received invalid JSON payload")
+                                conn.sendall(b"I encountered an error parsing the intent.\n")
     finally:
         mqtt_client.loop_stop()
         mqtt_client.disconnect()
-
 
 if __name__ == "__main__":
     run_intent_server()

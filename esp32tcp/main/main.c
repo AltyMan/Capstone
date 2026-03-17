@@ -16,30 +16,52 @@
 #include "esp_wn_models.h"
 #include "model_path.h"
 #include "driver/gpio.h"
-#include "ding_mp3.h" 
+#include "ding_mp3.h"
 
 static const char *TAG = "WAKENET_CLIENT";
 
+// --- PLAYBACK MODES ---
+typedef enum {
+    PLAY_MODE_FLASH,
+    PLAY_MODE_SOCKET
+} play_mode_t;
+
+static play_mode_t current_play_mode = PLAY_MODE_FLASH;
+static int active_tts_sock = -1;
 static int mp3_pos = 0;
 
+// 1. Dual-Mode MP3 Callback
 int mp3_read_cb(audio_element_handle_t el, char *buf, int len, TickType_t wait_time, void *ctx)
 {
-    int read_size = ding_mp3_len - mp3_pos;
-    if (read_size == 0) {
-        return AEL_IO_DONE; 
-    } else if (len < read_size) {
-        read_size = len;
+    if (current_play_mode == PLAY_MODE_FLASH) {
+        int read_size = ding_mp3_len - mp3_pos;
+        if (read_size <= 0) return AEL_IO_DONE; 
+        if (read_size > len) read_size = len;
+        
+        memcpy(buf, ding_mp3 + mp3_pos, read_size);
+        mp3_pos += read_size;
+        return read_size;
+        
+    } else if (current_play_mode == PLAY_MODE_SOCKET) {
+        if (active_tts_sock < 0) return AEL_IO_DONE;
+        
+        // Read directly from the TCP network socket
+        int bytes_read = recv(active_tts_sock, buf, len, 0);
+        
+        // If recv returns 0, the Python server finished sending the MP3 and closed the connection
+        if (bytes_read <= 0) return AEL_IO_DONE; 
+        
+        return bytes_read;
     }
-    memcpy(buf, ding_mp3 + mp3_pos, read_size);
-    mp3_pos += read_size;
-    return read_size;
+    return AEL_IO_DONE;
 }
 
-void play_mp3_ding(audio_pipeline_handle_t play_pipeline, audio_element_handle_t mp3_decoder, audio_element_handle_t i2s_writer) {
+// 2. Universal Anti-Pop Playback Function
+void play_mp3_audio(audio_pipeline_handle_t play_pipeline, audio_element_handle_t mp3_decoder, audio_element_handle_t i2s_writer) {
     int pa_gpio = get_pa_enable_gpio();
-    mp3_pos = 0;
+    if (pa_gpio >= 0) gpio_set_level(pa_gpio, 0); // Keep amplifier OFF
     
-    if (pa_gpio >= 0) gpio_set_level(pa_gpio, 0);
+    if (current_play_mode == PLAY_MODE_FLASH) mp3_pos = 0;
     
     audio_event_iface_cfg_t evt_cfg = AUDIO_EVENT_IFACE_DEFAULT_CFG();
     audio_event_iface_handle_t evt = audio_event_iface_init(&evt_cfg);
@@ -54,6 +76,7 @@ void play_mp3_ding(audio_pipeline_handle_t play_pipeline, audio_element_handle_t
         esp_err_t ret = audio_event_iface_listen(evt, &msg, portMAX_DELAY);
         if (ret != ESP_OK) continue;
 
+        // Catch the decoder info and apply it to the hardware dynamically
         if (msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.source == (void *) mp3_decoder
             && msg.cmd == AEL_MSG_CMD_REPORT_MUSIC_INFO) {
             audio_element_info_t music_info = {0};
@@ -62,12 +85,13 @@ void play_mp3_ding(audio_pipeline_handle_t play_pipeline, audio_element_handle_t
             audio_element_set_music_info(i2s_writer, music_info.sample_rates, music_info.channels, music_info.bits);
             i2s_stream_set_clk(i2s_writer, music_info.sample_rates, music_info.bits, music_info.channels);
             
+            // Soft-start the amplifier
             vTaskDelay(pdMS_TO_TICKS(20));
             if (pa_gpio >= 0) gpio_set_level(pa_gpio, 1);
-            
             continue;
         }
 
+        // Wait for the sound to naturally finish draining
         if (msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.source == (void *) i2s_writer
             && msg.cmd == AEL_MSG_CMD_REPORT_STATUS
             && (((int)msg.data == AEL_STATUS_STATE_STOPPED) || ((int)msg.data == AEL_STATUS_STATE_FINISHED))) {
@@ -75,7 +99,7 @@ void play_mp3_ding(audio_pipeline_handle_t play_pipeline, audio_element_handle_t
         }
     }
 
-    if (pa_gpio >= 0) gpio_set_level(pa_gpio, 0);
+    if (pa_gpio >= 0) gpio_set_level(pa_gpio, 0); // Kill amplifier BEFORE pipeline closes
 
     audio_pipeline_stop(play_pipeline);
     audio_pipeline_wait_for_stop(play_pipeline);
@@ -127,6 +151,7 @@ void app_main(void)
     int audio_chunksize_bytes = wakenet->get_samp_chunksize(model_data) * sizeof(int16_t);
     int16_t *buffer = (int16_t *) malloc(audio_chunksize_bytes);
 
+    // --- PLAYBACK PIPELINE (PORT 0) ---
     audio_pipeline_cfg_t play_pipeline_cfg = DEFAULT_AUDIO_PIPELINE_CONFIG();
     audio_pipeline_handle_t play_pipeline = audio_pipeline_init(&play_pipeline_cfg);
 
@@ -142,10 +167,12 @@ void app_main(void)
     const char *play_link_tag[2] = {"mp3", "i2s_out"};
     audio_pipeline_link(play_pipeline, &play_link_tag[0], 2); 
 
+    // --- RECORDING PIPELINE (PORT 1) ---
     audio_pipeline_cfg_t rec_pipeline_cfg = DEFAULT_AUDIO_PIPELINE_CONFIG();
     audio_pipeline_handle_t rec_pipeline = audio_pipeline_init(&rec_pipeline_cfg);
 
     i2s_stream_cfg_t i2s_cfg_read = I2S_STREAM_CFG_DEFAULT_WITH_TYLE_AND_CH(1, 16000, 16, AUDIO_STREAM_READER, 1);
+    i2s_cfg_read.out_rb_size = 64*1024;
     audio_element_handle_t i2s_stream_reader = i2s_stream_init(&i2s_cfg_read);
     
     raw_stream_cfg_t raw_cfg_read = RAW_STREAM_CFG_DEFAULT();
@@ -171,12 +198,16 @@ void app_main(void)
         if (res > 0) {
             ESP_LOGI(TAG, "WAKE WORD DETECTED");
 
+            // Pause Mic
             audio_pipeline_stop(rec_pipeline);
             audio_pipeline_wait_for_stop(rec_pipeline);
 
-            ESP_LOGI(TAG, "Triggering MP3 Ding...");
-            play_mp3_ding(play_pipeline, mp3_decoder, i2s_stream_writer);
+            // Play the Local MP3 Ding
+            ESP_LOGI(TAG, "Triggering Local Ding...");
+            current_play_mode = PLAY_MODE_FLASH;
+            play_mp3_audio(play_pipeline, mp3_decoder, i2s_stream_writer);
 
+            // Restart Mic
             audio_pipeline_reset_ringbuffer(rec_pipeline);
             audio_pipeline_reset_elements(rec_pipeline);
             audio_pipeline_run(rec_pipeline);
@@ -188,9 +219,15 @@ void app_main(void)
             server_addr.sin_port = htons(CONFIG_TCP_PORT);
             inet_pton(AF_INET, CONFIG_TCP_URL, &server_addr.sin_addr.s_addr);
             
+            // Set a 10-second timeout so the ESP doesn't freeze if the Python server crashes
+            struct timeval tv;
+            tv.tv_sec = 10;
+            tv.tv_usec = 0;
+            setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
+            
             if (connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr)) == 0) {
-                ESP_LOGI(TAG, "Streaming 5 seconds of audio...");
-                int bytes_to_send = 160000;
+                ESP_LOGI(TAG, "Streaming 3 seconds of audio...");
+                int bytes_to_send = 96000; // 3 seconds * 16000 samples/second * 2 bytes/sample
                 int bytes_sent = 0;
                 
                 while (bytes_sent < bytes_to_send) {
@@ -202,7 +239,28 @@ void app_main(void)
                         vTaskDelay(pdMS_TO_TICKS(10));
                     }
                 }
+                
+                // === NEW: RECEIVE TTS RESPONSE ===
+                ESP_LOGI(TAG, "Command sent. Waiting for TTS response...");
+                
+                // Stop Mic so the speaker can take over
+                audio_pipeline_stop(rec_pipeline);
+                audio_pipeline_wait_for_stop(rec_pipeline);
+                
+                // Switch mode and play!
+                current_play_mode = PLAY_MODE_SOCKET;
+                active_tts_sock = sock;
+                play_mp3_audio(play_pipeline, mp3_decoder, i2s_stream_writer);
+                
+                // Cleanup
                 close(sock);
+                active_tts_sock = -1;
+                ESP_LOGI(TAG, "TTS complete. Restarting Mic...");
+                
+                audio_pipeline_reset_ringbuffer(rec_pipeline);
+                audio_pipeline_reset_elements(rec_pipeline);
+                audio_pipeline_run(rec_pipeline);
+
             } else {
                 ESP_LOGE(TAG, "Failed to connect to server");
                 close(sock);
