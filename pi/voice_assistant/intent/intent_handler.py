@@ -181,8 +181,20 @@ def std_set_topic(device_id: str) -> str:
     return f"/home/{device_id}/set"
 
 
+def _infer_target_plug_from_speech(speech: Optional[str]) -> Optional[str]:
+    if not speech:
+        return None
+
+    text = speech.lower()
+    if re.search(r"\b(plug\s*1|plug\s*one|first\s*plug|plug1)\b", text):
+        return "plug1"
+    if re.search(r"\b(plug\s*2|plug\s*two|second\s*plug|plug2)\b", text):
+        return "plug2"
+    return None
+
+
 def publish_intent_to_mqtt(client: mqtt.Client, intent: Intent) -> None:
-    # Route to a specific plug if parsed; otherwise broadcast to both plugs.
+    # Route only to one plug. Do not broadcast set/toggle commands to both plugs.
     if intent.action == IntentAction.SET and intent.command in ("on", "off"):
         command = intent.command
     elif intent.action == IntentAction.TOGGLE:
@@ -191,14 +203,17 @@ def publish_intent_to_mqtt(client: mqtt.Client, intent: Intent) -> None:
         return
 
     if intent.device in TARGET_PLUGS:
-        target_devices = (intent.device,)
+        target_device = intent.device
     else:
-        target_devices = TARGET_PLUGS
+        target_device = _infer_target_plug_from_speech(intent.raw_speech)
 
-    for device_id in target_devices:
-        topic = std_set_topic(device_id)
-        client.publish(topic, command, qos=0, retain=False)
-        print(f"[MQTT] {topic} <- {command}")
+    if target_device is None:
+        print("[MQTT] Skipped publish: no target plug resolved from intent")
+        return
+
+    topic = std_set_topic(target_device)
+    client.publish(topic, command, qos=0, retain=False)
+    print(f"[MQTT] {topic} <- {command}")
 
 
 def run_intent_server(host: str = "127.0.0.1", port: int = 9090) -> None:
