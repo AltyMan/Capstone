@@ -40,9 +40,9 @@ class HttpHabitRepository extends HttpRepository<Habit> {
     return res.statusCode == 200;
   }
 
-  @override
+  
   Future<bool> delete(int id) async {
-    final res = await client.delete(uri('/$id'));
+    final res = await client.delete(uri('/delete?$id'));
     return res.statusCode == 200;
   }
 }

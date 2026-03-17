@@ -11,9 +11,9 @@ class Habit {
 
   factory Habit.fromJson(Map<String, dynamic> json) {
     return Habit(
-      id: json['id'],
-      name: json['name'],
-      isDevice: json['is_device'],
+      id: json['id'] ?? 0,
+      name: json['habit_name'] ?? "None",
+      isDevice: json['is_device'] ?? false,
     );
   }
 

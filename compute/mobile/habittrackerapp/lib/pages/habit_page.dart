@@ -26,9 +26,10 @@ class _HabitPageState extends State<HabitPage> {
   Future<void> loadHabits() async {
     try {
       final data = await repo.read();
-      print(data);
+      
       setState(() {
         habits = data;
+       // print(habits);
       });
     } catch (e) {
       print(e);
@@ -54,7 +55,7 @@ class _HabitPageState extends State<HabitPage> {
   }
 
   Future<void> deleteHabit(int id) async {
-    await repo.delete(id);
+    await repo.delete(0);
     await loadHabits();
   }
 
@@ -104,7 +105,7 @@ class _HabitPageState extends State<HabitPage> {
               trailing: IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () => deleteHabit(habit.id),
-              ),
+              )
             );
           },
         ),

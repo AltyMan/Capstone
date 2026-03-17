@@ -1,4 +1,5 @@
 Launching lib/main.dart on SM S926W in debug mode...
+print("Hello from the config script!")
 Running Gradle task 'assembleDebug'...                           1,881ms
 ✓ Built build/app/outputs/flutter-apk/app-debug.apk
 Installing build/app/outputs/flutter-apk/app-debug.apk...           3.5s
